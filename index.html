@@ -24,70 +24,55 @@
         body {
             color: var(--text-main); font-family: 'Roboto', sans-serif;
             display: flex; flex-direction: column; align-items: center; 
-            padding-bottom: 50px; min-height: 100vh; background-color: #030303; overflow-x: hidden;
+            padding-bottom: 50px; min-height: 100vh; background-color: #000000; overflow-x: hidden;
         }
 
-        /* Canvas de fundo camuflado mais nítido com cores táticas da Choque (Preto, Cinza Chumbo e Vermelho Sutil) */
-        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; filter: blur(4px); transform: scale(1.02); opacity: 0.95; }
+        /* Canvas de Fundo para animação de tiros cruzando a tela inteira */
+        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 25px 25px; z-index: -1; pointer-events: none;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px; z-index: -1; pointer-events: none;
         }
 
-        .container { width: 100%; max-width: 900px; padding: 20px; }
+        .container { width: 100%; max-width: 900px; padding: 20px; z-index: 2; position: relative; }
         header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
         
-        /* CONTAINER DA LOGO COM ÓRBITA DE ARMAS (M5) E EFEITO DE FOGO */
+        /* CONTAINER DA LOGO COM ANIMAÇÃO DE CARREGAMENTO EM AMARELO */
         .logo-wrapper {
             position: relative;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto 20px auto;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 15px auto;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        @keyframes fireLogoRing {
-            0% { box-shadow: 0 0 15px #ff2200, 0 0 30px #ff5500, inset 0 0 15px #ff2200; border-color: #ff5500; }
-            50% { box-shadow: 0 0 25px #ff0000, 0 0 45px #ff6600, inset 0 0 25px #ff4400; border-color: #ffaa00; }
-            100% { box-shadow: 0 0 15px #ff2200, 0 0 30px #ff5500, inset 0 0 15px #ff2200; border-color: #ff5500; }
+        @keyframes spinLoader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-ring {
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-yellow);
+            border-bottom-color: var(--accent-yellow);
+            animation: spinLoader 1.5s linear infinite;
+            pointer-events: none;
+            box-shadow: 0 0 12px rgba(248, 197, 69, 0.4);
         }
 
         .logo-container { 
-            width: 105px; height: 105px; border-radius: 50%; 
+            width: 110px; height: 110px; border-radius: 50%; 
             background: url('https://scontent.faju21-1.fna.fbcdn.net/v/t39.30808-1/272909814_4717619788351034_6969902351451184948_n.jpg?stp=dst-jpg_tt6&cstp=mx698x698&ctp=s200x200&_nc_cat=105&ccb=1-7&_nc_sid=2d3e12&_nc_eui2=AeFS2qerkmq5-9JnXnYRoofXTY8DR0wSmKxNjwNHTBKYrP6AF-Er1x6RkHMDY6TkmxdLHl1V_gdEPvsZVT4q5WWK&_nc_ohc=pt-ZW675HLcQ7kNvwHBxgGG&_nc_oc=Adq7eEqAKWTfdSe-Qtm02NA2ABVFIVbRLuSZzAS8zuxz9Vkd7Dkgbh54Vyf_6BdD-2VJiOm4pRTmyGpm57tqsQ0H&_nc_zt=24&_nc_ht=scontent.faju21-1.fna&_nc_gid=sZgUXV4CggNNaIjov7XFKA&_nc_ss=7b2a8&oh=00_AQDnkINqtn8j6tq-7NDMKl8DSI85Fqw3PRKZHKt9kd42Mw&oe=6A66177F') center/cover; 
-            border: 3px solid #ff5500; 
-            animation: fireLogoRing 1.2s ease-in-out infinite; 
+            border: 2px solid #333; 
             cursor: pointer;
             z-index: 2;
         }
-
-        /* ÓRBITA CIRCULAR DAS ARMAS M5 */
-        @keyframes orbit {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .orbit-ring {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            animation: orbit 6s linear infinite;
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        .orbit-gun {
-            position: absolute;
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 0 4px #ff3300);
-        }
-
-        /* Posicionamento oposto (180 graus) das duas M5 */
-        .gun-1 { top: -6px; left: calc(50% - 16px); }
-        .gun-2 { bottom: -6px; left: calc(50% - 16px); transform: rotate(180deg); }
 
         h1 { font-family: 'Oswald', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
         .subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
@@ -195,6 +180,7 @@
 </head>
 <body>
 
+<!-- CANVAS DE FUNDO PARA OS TIROS CRUZANDO A TELA -->
 <canvas id="bgCanvas"></canvas>
 
 <!-- MODAL DE ZOOM DE IMAGEM -->
@@ -205,13 +191,9 @@
 
 <div class="container">
     <header>
-        <!-- LOGO COM CHAMAS E ARMAS M5 ORBITANDO -->
+        <!-- LOGO COM ANIMAÇÃO TIPO TELA DE CARREGAMENTO EM AMARELO -->
         <div class="logo-wrapper">
-            <div class="orbit-ring">
-                <!-- Ícone SVG de Fuzil/Metralhadora M5 simulando taticamente em órbita -->
-                <svg class="orbit-gun gun-1" viewBox="0 0 24 24" fill="#ff5500"><path d="M22 2v2h-2v2h-2v2h-2v2H6v2H4v2H2v4h2v2h4v-2H4v-2h2v-2h2v-2h8v2h2v2h2v-2h2V2h-2z"/></svg>
-                <svg class="orbit-gun gun-2" viewBox="0 0 24 24" fill="#ff5500"><path d="M22 2v2h-2v2h-2v2h-2v2H6v2H4v2H2v4h2v2h4v-2H4v-2h2v-2h2v-2h8v2h2v2h2v-2h2V2h-2z"/></svg>
-            </div>
+            <div class="loading-ring"></div>
             <div class="logo-container" id="btnAdmin" title="Dê um duplo clique para logar como Admin"></div>
         </div>
 
@@ -544,7 +526,7 @@
                     ${conteudoImagens}
                     <div class="print-info">
                         <div class="print-tag">${print.tagRender}</div>
-                        <div class="print-date">${print.data}</div>
+                        <div class="print-date">${print.date}</div>
                         <div class="print-desc">${print.desc}</div>
                     </div>
                 `;
@@ -570,50 +552,80 @@
         document.getElementById('imageModal').style.display = 'none';
     }
 
-    /* CANVAS DE FUNDO: CAMUFLAGEM COM AS CORES DA CHOQUE (60% MAIS NÍDITA) */
+    /* ANIMAÇÃO DE TIROS CRUZANDO A TELA INTEIRA (FUNDO PRETO) */
     const canvas = document.getElementById("bgCanvas");
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    let patchesArray = [];
-    // Cores táticas da Choque (Preto Operacional, Cinza Aço, Chumbo e Vermelho Escuro Operacional)
-    const choquecolors = ['#141416', '#22252a', '#2c323b', '#3a1c1c', '#181b20'];
+    canvas.width = window.innerWidth; 
+    canvas.height = window.innerHeight;
 
-    class CamoPatch {
+    let bullets = [];
+
+    class Bullet {
         constructor() {
-            this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
-            this.rx = Math.random() * 180 + 90; this.ry = Math.random() * 130 + 70;
-            this.angle = Math.random() * Math.PI * 2; this.speed = Math.random() * 0.15 + 0.04;
-            this.vx = Math.cos(this.angle) * this.speed; this.vy = Math.sin(this.angle) * this.speed;
-            this.color = choquecolors[Math.floor(Math.random() * choquecolors.length)];
-            this.rotationSpeed = (Math.random() - 0.5) * 0.002;
+            this.reset();
+        }
+        reset() {
+            // Começa de um lado aleatório da tela e vai para o outro (tiros cruzando sem obstáculos)
+            this.x = Math.random() < 0.5 ? -50 : canvas.width + 50;
+            this.y = Math.random() * canvas.height;
+            const targetX = this.x < 0 ? canvas.width + 50 : -50;
+            const targetY = Math.random() * canvas.height;
+            
+            const angle = Math.atan2(targetY - this.y, targetX - this.x);
+            const speed = Math.random() * 8 + 6; // Velocidade rápida estilo projétil
+            
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.length = Math.random() * 25 + 15; // Comprimento do rastro do tiro
+            this.color = Math.random() < 0.2 ? '#f8c545' : '#ff3300'; // Maioria vermelhos com alguns amarelos traçantes
         }
         update() {
-            this.x += this.vx; this.y += this.vy; this.angle += this.rotationSpeed;
-            if (this.x < -this.rx) this.x = canvas.width + this.rx;
-            if (this.x > canvas.width + this.rx) this.x = -this.rx;
-            if (this.y < -this.ry) this.y = canvas.height + this.ry;
-            if (this.y > canvas.height + this.ry) this.y = -this.ry;
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Se sair da tela, recria o tiro em outro ponto
+            if (this.x < -100 || this.x > canvas.width + 100 || this.y < -100 || this.y > canvas.height + 100) {
+                this.reset();
+            }
         }
-        draw() { 
-            ctx.fillStyle = this.color; 
-            ctx.beginPath(); 
-            ctx.ellipse(this.x, this.y, this.rx, this.ry, this.angle, 0, Math.PI * 2); 
-            ctx.fill(); 
+        draw() {
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let tailX = this.x - this.vx * (this.length / 5);
+            let tailY = this.y - this.vy * (this.length / 5);
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(tailX, tailY);
+            ctx.stroke();
         }
     }
 
-    function initCamo() { patchesArray = []; let numPatches = Math.floor((canvas.width * canvas.height) / 16000); for (let i = 0; i < numPatches; i++) patchesArray.push(new CamoPatch()); }
-    function animateCamo() { 
-        ctx.fillStyle = '#060708'; 
-        ctx.fillRect(0, 0, canvas.width, canvas.height); 
-        for (let i = 0; i < patchesArray.length; i++) { 
-            patchesArray[i].update(); 
-            patchesArray[i].draw(); 
-        } 
-        requestAnimationFrame(animateCamo); 
+    function initBullets() {
+        bullets = [];
+        let numBullets = 25; // Quantidade perfeita de tiros simultâneos cruzando a tela
+        for (let i = 0; i < numBullets; i++) {
+            bullets.push(new Bullet());
+        }
     }
-    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initCamo(); });
-    initCamo(); animateCamo();
+
+    function animateBullets() {
+        ctx.fillStyle = '#000000'; // Fundo preto puro
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < bullets.length; i++) {
+            bullets[i].update();
+            bullets[i].draw();
+        }
+        requestAnimationFrame(animateBullets);
+    }
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    initBullets();
+    animateBullets();
 </script>
 
 </body>
