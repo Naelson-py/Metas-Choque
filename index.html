@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batalhão Choque 1BTL - Painel</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- CONEXÃO COM O FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --card-bg: #1c1e24;
@@ -17,34 +22,19 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            color: var(--text-main); 
-            font-family: 'Roboto', sans-serif;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding-bottom: 50px;
-            min-height: 100vh;
-            background-color: #050505; 
-            overflow-x: hidden;
+            color: var(--text-main); font-family: 'Roboto', sans-serif;
+            display: flex; flex-direction: column; align-items: center; 
+            padding-bottom: 50px; min-height: 100vh; background-color: #050505; overflow-x: hidden;
         }
 
-        #bgCanvas {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -2; filter: blur(25px); transform: scale(1.1);
-        }
-
+        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; filter: blur(25px); transform: scale(1.1); }
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 30px 30px; z-index: -1; pointer-events: none;
         }
 
-        /* -------------------------------------------
-           LARGURA AUMENTADA PARA CABER LADO A LADO 
-        --------------------------------------------- */
         .container { width: 100%; max-width: 900px; padding: 20px; }
-
         header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
         
         @keyframes radarPulse {
@@ -53,11 +43,11 @@
             100% { box-shadow: 0 0 0 0 rgba(217, 37, 37, 0), 0 0 20px rgba(0,0,0,0.8); }
         }
 
+        /* LOGO CLICÁVEL PARA LOGIN */
         .logo-container { 
             width: 100px; height: 100px; margin: 0 auto 15px auto; border-radius: 50%; 
             background: url('https://scontent.faju21-1.fna.fbcdn.net/v/t39.30808-1/272909814_4717619788351034_6969902351451184948_n.jpg?stp=dst-jpg_tt6&cstp=mx698x698&ctp=s200x200&_nc_cat=105&ccb=1-7&_nc_sid=2d3e12&_nc_eui2=AeFS2qerkmq5-9JnXnYRoofXTY8DR0wSmKxNjwNHTBKYrP6AF-Er1x6RkHMDY6TkmxdLHl1V_gdEPvsZVT4q5WWK&_nc_ohc=pt-ZW675HLcQ7kNvwHBxgGG&_nc_oc=Adq7eEqAKWTfdSe-Qtm02NA2ABVFIVbRLuSZzAS8zuxz9Vkd7Dkgbh54Vyf_6BdD-2VJiOm4pRTmyGpm57tqsQ0H&_nc_zt=24&_nc_ht=scontent.faju21-1.fna&_nc_gid=sZgUXV4CggNNaIjov7XFKA&_nc_ss=7b2a8&oh=00_AQDnkINqtn8j6tq-7NDMKl8DSI85Fqw3PRKZHKt9kd42Mw&oe=6A66177F') center/cover; 
-            border: 2px solid #333; 
-            animation: radarPulse 2s infinite;
+            border: 2px solid #333; animation: radarPulse 2s infinite; cursor: pointer;
         }
 
         h1 { font-family: 'Oswald', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
@@ -69,41 +59,33 @@
 
         .section-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 1px; margin: 30px 0 15px 0; border-left: 4px solid var(--primary-red); padding-left: 10px; text-shadow: 1px 1px 2px #000; }
         
-        /* -------------------------------------------
-           LAYOUT RESPONSIVO (MOBILE vs DESKTOP) 
-        --------------------------------------------- */
         .metas-wrapper { display: flex; flex-direction: column; gap: 15px; }
-        
-        .card { background-color: rgba(28, 30, 36, 0.85); backdrop-filter: blur(5px); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
-        .metas-wrapper .card { margin-bottom: 0; } /* Remove a margem extra porque o "gap" já separa */
+        .card { background-color: rgba(28, 30, 36, 0.85); backdrop-filter: blur(5px); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Regra para telas grandes (PC/Tablets) */
         @media (min-width: 768px) {
             .metas-wrapper { flex-direction: row; justify-content: space-between; }
-            .metas-wrapper .card { flex: 1; } /* Faz as 3 metas terem o mesmo tamanho exato */
-            
-            /* Grade para os prints no PC */
+            .metas-wrapper .card { flex: 1; } 
             #printsContainer { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
             .print-card { margin-bottom: 0 !important; }
         }
 
         .goal-header { display: flex; align-items: center; gap: 10px; font-weight: 500; margin-bottom: 15px; font-size: 15px; }
         .goal-numbers { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-muted); margin-bottom: 10px; }
-        .current-num, .meta-num { font-size: 30px; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .current-num:hover, .meta-num:hover { color: var(--accent-yellow); }
+        
+        /* O cursor padrão para visitantes */
+        .current-num, .meta-num { font-size: 30px; color: var(--text-main); font-weight: 700; transition: 0.2s; cursor: default; }
+        /* No modo admin, ele ganha o cursor clicável e o efeito hover */
+        .admin-mode .current-num:hover, .admin-mode .meta-num:hover { color: var(--accent-yellow); cursor: pointer; }
         .meta-num { font-size: 22px; color: #888; }
         
         .progress-track { width: 100%; height: 8px; background-color: rgba(0,0,0,0.6); border-radius: 5px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.8); }
         .goal-percent { text-align: right; font-family: 'Oswald', sans-serif; font-size: 16px; margin-top: 8px; font-weight: bold; transition: 0.3s; }
 
         .progress-fill { height: 100%; border-radius: 5px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s; }
-        
         .bar-red { background: linear-gradient(90deg, #660000, #ff3333, #660000); box-shadow: 0 0 12px rgba(255, 51, 51, 0.5); }
         .text-red { color: #ff3333; text-shadow: 0 0 5px rgba(255, 51, 51, 0.4); }
-        
         .bar-yellow { background: linear-gradient(90deg, #806600, #ffcc00, #806600); box-shadow: 0 0 12px rgba(255, 204, 0, 0.5); }
         .text-yellow { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
-        
         .bar-green { background: linear-gradient(90deg, #004d00, #00e600, #004d00); box-shadow: 0 0 12px rgba(0, 230, 0, 0.5); }
         .text-green { color: #00e600; text-shadow: 0 0 5px rgba(0, 230, 0, 0.4); }
         
@@ -112,13 +94,12 @@
             50% { background-position: 100% 50%; box-shadow: 0 0 25px #00ff00, 0 0 10px #ffffff inset; }
             100% { background-position: 0% 50%; box-shadow: 0 0 15px #00e600, 0 0 5px #00ff88 inset; }
         }
-        .bar-gold-flames {
-            background: linear-gradient(90deg, #004d00, #00ff88, #00e600, #ccffcc, #004d00);
-            background-size: 300% 300%;
-            animation: fireGlow 0.5s ease-in-out infinite;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
+        .bar-gold-flames { background: linear-gradient(90deg, #004d00, #00ff88, #00e600, #ccffcc, #004d00); background-size: 300% 300%; animation: fireGlow 0.5s ease-in-out infinite; border: 1px solid rgba(255, 255, 255, 0.4); }
         .text-gold-flames { color: #00ff88; text-shadow: 0 0 10px #00e600; font-size: 18px; }
+
+        /* MODO ADMIN: A caixa de upload ficará escondida para visitantes */
+        .area-restrita { display: none; }
+        .admin-mode .area-restrita { display: block; }
 
         .upload-box { background-color: rgba(28, 30, 36, 0.85); backdrop-filter: blur(5px); border: 1px dashed var(--primary-red); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
         .upload-box input[type="file"] { display: none; }
@@ -141,7 +122,11 @@
         .print-tag { color: var(--accent-yellow); font-weight: bold; font-size: 14px; margin-bottom: 5px; }
         .print-date { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
         .print-desc { font-size: 14px; line-height: 1.4; }
-        .delete-print { position: absolute; top: 10px; right: 10px; background-color: rgba(0,0,0,0.8); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
+        
+        /* Botão de deletar escondido de visitantes */
+        .delete-print { display: none; position: absolute; top: 10px; right: 10px; background-color: rgba(0,0,0,0.8); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
+        .admin-mode .delete-print { display: block; }
+
     </style>
 </head>
 <body>
@@ -150,23 +135,23 @@
 
 <div class="container">
     <header>
-        <div class="logo-container"></div>
+        <!-- Clique duplo aqui para virar Admin -->
+        <div class="logo-container" id="btnAdmin"></div>
         <h1>BATALHÃO CHOQUE 1BTL</h1>
         <div class="subtitle">Painel de Metas Individuais</div>
-        <div class="tag-efetivo">Efetivo: [TJF]ReSTo.Bdo[1BTL]</div>
-        <div class="status-online"><div class="status-dot"></div> SISTEMA ONLINE</div>
+        <div class="tag-efetivo">Efetivo: [GT]Wesley1BTL</div>
+        <div class="status-online"><div class="status-dot"></div> <span id="statusTxt">CONECTANDO A NUVEM...</span></div>
     </header>
 
     <div class="divider"></div>
 
     <div class="section-title">METAS ATIVAS</div>
-
-    <!-- CAIXA INVISÍVEL (WRAPPER) QUE ORGANIZA AS METAS -->
     <div class="metas-wrapper">
         <div class="card">
             <div class="goal-header">🎯 Abates de Traficantes</div>
             <div class="goal-numbers">
-                <span class="current-num" id="abatesAtual">0</span> / <span class="meta-num" id="abatesMeta">15</span>
+                <span class="current-num" onclick="alterarMeta('abatesAtual')" id="abatesAtual">0</span> / 
+                <span class="meta-num" onclick="alterarMeta('abatesMeta')" id="abatesMeta">15</span>
             </div>
             <div class="progress-track"><div class="progress-fill" id="abatesFill" style="width: 0%;"></div></div>
             <div class="goal-percent" id="abatesPct">0%</div>
@@ -175,7 +160,8 @@
         <div class="card">
             <div class="goal-header">🚓 Prisões</div>
             <div class="goal-numbers">
-                <span class="current-num" id="prisoesAtual">0</span> / <span class="meta-num" id="prisoesMeta">25</span>
+                <span class="current-num" onclick="alterarMeta('prisoesAtual')" id="prisoesAtual">0</span> / 
+                <span class="meta-num" onclick="alterarMeta('prisoesMeta')" id="prisoesMeta">25</span>
             </div>
             <div class="progress-track"><div class="progress-fill" id="prisoesFill" style="width: 0%;"></div></div>
             <div class="goal-percent" id="prisoesPct">0%</div>
@@ -184,27 +170,31 @@
         <div class="card">
             <div class="goal-header">🏋️ Treinos</div>
             <div class="goal-numbers">
-                <span class="current-num" id="treinosAtual">0</span> / <span class="meta-num" id="treinosMeta">20</span>
+                <span class="current-num" onclick="alterarMeta('treinosAtual')" id="treinosAtual">0</span> / 
+                <span class="meta-num" onclick="alterarMeta('treinosMeta')" id="treinosMeta">20</span>
             </div>
             <div class="progress-track"><div class="progress-fill" id="treinosFill" style="width: 0%;"></div></div>
             <div class="goal-percent" id="treinosPct">0%</div>
         </div>
     </div>
 
-    <div class="section-title">REGISTRAR ATIVIDADE</div>
-    <div class="upload-box">
-        <img id="previewUpload" src="" alt="Pré-visualização">
-        <label class="upload-label" for="printInput">📷 Escolher Print</label>
-        <input type="file" id="printInput" accept="image/*">
-        
-        <select id="printTag">
-            <option value="Info">📊 Info</option>
-            <option value="Treinos">🏋️ Treinos</option>
-            <option value="Operação/Blitz">🚓 Operação/Blitz</option>
-        </select>
-        
-        <input type="text" id="printDesc" placeholder="Descreva a atividade...">
-        <button onclick="salvarPrint()">PUBLICAR REGISTRO</button>
+    <!-- AREA RESTRITA A ADMIN (Upload) -->
+    <div class="area-restrita">
+        <div class="section-title">REGISTRAR ATIVIDADE</div>
+        <div class="upload-box">
+            <img id="previewUpload" src="" alt="Pré-visualização">
+            <label class="upload-label" for="printInput">📷 Escolher Print</label>
+            <input type="file" id="printInput" accept="image/*">
+            
+            <select id="printTag">
+                <option value="Info">📊 Info</option>
+                <option value="Treinos">🏋️ Treinos</option>
+                <option value="Operação/Blitz">🚓 Operação/Blitz</option>
+            </select>
+            
+            <input type="text" id="printDesc" placeholder="Descreva a atividade...">
+            <button onclick="salvarPrint()">PUBLICAR REGISTRO NA NUVEM</button>
+        </div>
     </div>
 
     <div class="section-title">MEUS REGISTROS</div>
@@ -219,157 +209,177 @@
 </div>
 
 <script>
-    /* =========================================
-       1. FUNDO CAMUFLADO CHOQUE
-       ========================================= */
-    const canvas = document.getElementById("bgCanvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    let patchesArray = [];
-    const camoColors = ['#080808', '#1a1a1a', '#2b2b2b', '#121413'];
+    /* ==========================================================
+       🚨 PASSO FINAL: COLE O CÓDIGO DO SEU FIREBASE AQUI ABAIXO🚨 
+       ========================================================== */
+    const firebaseConfig = {
+        // APAGUE AS 6 LINHAS ABAIXO E COLE A SUA CONFIGURAÇÃO QUE VOCÊ PEGOU LÁ NO FIREBASE
+        apiKey: "COLE_AQUI",
+        authDomain: "COLE_AQUI",
+        projectId: "COLE_AQUI",
+        storageBucket: "COLE_AQUI",
+        messagingSenderId: "COLE_AQUI",
+        appId: "COLE_AQUI"
+    };
 
-    class CamoPatch {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.rx = Math.random() * 200 + 100;
-            this.ry = Math.random() * 150 + 80;
-            this.angle = Math.random() * Math.PI * 2;
-            this.speed = Math.random() * 0.2 + 0.05;
-            this.vx = Math.cos(this.angle) * this.speed;
-            this.vy = Math.sin(this.angle) * this.speed;
-            this.color = camoColors[Math.floor(Math.random() * camoColors.length)];
-            this.rotationSpeed = (Math.random() - 0.5) * 0.002;
-        }
-        update() {
-            this.x += this.vx; this.y += this.vy; this.angle += this.rotationSpeed;
-            if (this.x < -this.rx) this.x = canvas.width + this.rx;
-            if (this.x > canvas.width + this.rx) this.x = -this.rx;
-            if (this.y < -this.ry) this.y = canvas.height + this.ry;
-            if (this.y > canvas.height + this.ry) this.y = -this.ry;
-        }
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.ellipse(this.x, this.y, this.rx, this.ry, this.angle, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
+    // Inicializa a Nuvem
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    function initCamo() {
-        patchesArray = [];
-        let numPatches = Math.floor((canvas.width * canvas.height) / 30000); 
-        for (let i = 0; i < numPatches; i++) patchesArray.push(new CamoPatch());
-    }
-
-    function animateCamo() {
-        ctx.fillStyle = '#050505'; 
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < patchesArray.length; i++) {
-            patchesArray[i].update(); patchesArray[i].draw();
-        }
-        requestAnimationFrame(animateCamo);
-    }
-    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initCamo(); });
-    initCamo(); animateCamo();
+    document.getElementById("statusTxt").innerText = "SISTEMA ONLINE (NUVEM)";
 
     /* =========================================
-       2. CORES DINÂMICAS NAS BARRAS E TEXTO
+       SISTEMA DE LOGIN / ADMIN
        ========================================= */
-    function calcularPorcentagem(idBase) {
-        let atual = parseFloat(localStorage.getItem(idBase + 'Atual')) || parseFloat(document.getElementById(idBase + 'Atual').innerText) || 0;
-        let meta = parseFloat(localStorage.getItem(idBase + 'Meta')) || parseFloat(document.getElementById(idBase + 'Meta').innerText) || 1;
-        
-        let porcentagem = (atual / meta) * 100;
-        let pText = document.getElementById(idBase + 'Pct');
-        let bar = document.getElementById(idBase + 'Fill');
-        
-        document.getElementById(idBase + 'Atual').innerText = atual;
-        document.getElementById(idBase + 'Meta').innerText = meta;
-        pText.innerText = porcentagem.toFixed(0) + '%';
-        
-        let tamanhoBarra = porcentagem > 100 ? 100 : porcentagem;
-        bar.style.width = tamanhoBarra + '%';
+    let isAdmin = false;
+    const SENHA_ADMIN = "choque"; // <-- VOCÊ PODE MUDAR SUA SENHA AQUI
 
-        bar.className = 'progress-fill'; 
-        pText.className = 'goal-percent'; 
-        
-        if (porcentagem < 20) {
-            bar.classList.add('bar-red');
-            pText.classList.add('text-red');
-        } else if (porcentagem < 50) {
-            bar.classList.add('bar-yellow');
-            pText.classList.add('text-yellow');
-        } else if (porcentagem < 100) {
-            bar.classList.add('bar-green');
-            pText.classList.add('text-green');
+    document.getElementById('btnAdmin').addEventListener('dblclick', function() {
+        if (!isAdmin) {
+            let senha = prompt("Acesso Restrito. Digite a senha do Painel:");
+            if (senha === SENHA_ADMIN) {
+                isAdmin = true;
+                document.body.classList.add('admin-mode');
+                alert("ACESSO LIBERADO: Bem-vindo Administrador!");
+            } else if(senha) {
+                alert("Senha Incorreta!");
+            }
         } else {
-            bar.classList.add('bar-gold-flames');
-            pText.classList.add('text-gold-flames'); 
+            // Se já for admin e der dois cliques de novo, ele desloga
+            isAdmin = false;
+            document.body.classList.remove('admin-mode');
+            alert("Desconectado do modo Administrador.");
         }
-    }
-
-    ['abates', 'prisoes', 'treinos'].forEach(idBase => {
-        ['Atual', 'Meta'].forEach(tipo => {
-            let elemento = document.getElementById(idBase + tipo);
-            elemento.addEventListener('click', function() {
-                let valor = prompt("Digite o novo valor (apenas números):", this.innerText);
-                if (valor !== null && !isNaN(valor) && valor.trim() !== "") {
-                    localStorage.setItem(this.id, valor);
-                    calcularPorcentagem(idBase); 
-                }
-            });
-        });
-        calcularPorcentagem(idBase); 
     });
 
     /* =========================================
-       3. UPLOAD E FILTROS
+       LÓGICA DAS METAS (NUVEM)
+       ========================================= */
+    // Essa função atualiza o visual da tela
+    function renderizarMeta(idBase, atual, meta) {
+        document.getElementById(idBase + 'Atual').innerText = atual;
+        document.getElementById(idBase + 'Meta').innerText = meta;
+        
+        let porcentagem = meta > 0 ? (atual / meta) * 100 : 0;
+        let pText = document.getElementById(idBase + 'Pct');
+        let bar = document.getElementById(idBase + 'Fill');
+        
+        pText.innerText = porcentagem.toFixed(0) + '%';
+        let tamanhoBarra = porcentagem > 100 ? 100 : porcentagem;
+        bar.style.width = tamanhoBarra + '%';
+        bar.className = 'progress-fill'; pText.className = 'goal-percent'; 
+        
+        if (porcentagem < 20) { bar.classList.add('bar-red'); pText.classList.add('text-red'); } 
+        else if (porcentagem < 50) { bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); } 
+        else if (porcentagem < 100) { bar.classList.add('bar-green'); pText.classList.add('text-green'); } 
+        else { bar.classList.add('bar-gold-flames'); pText.classList.add('text-gold-flames'); }
+    }
+
+    // Escutando as metas do banco de dados em tempo real
+    db.collection("painel").doc("metas").onSnapshot((doc) => {
+        if (doc.exists) {
+            let dados = doc.data();
+            renderizarMeta('abates', dados.abatesAtual || 0, dados.abatesMeta || 15);
+            renderizarMeta('prisoes', dados.prisoesAtual || 0, dados.prisoesMeta || 25);
+            renderizarMeta('treinos', dados.treinosAtual || 0, dados.treinosMeta || 20);
+        } else {
+            // Se for a primeira vez que entra no site, cria os dados no banco
+            db.collection("painel").doc("metas").set({
+                abatesAtual: 0, abatesMeta: 15, prisoesAtual: 0, prisoesMeta: 25, treinosAtual: 0, treinosMeta: 20
+            });
+        }
+    });
+
+    // Função de clique ativada apenas se for Admin
+    function alterarMeta(campo) {
+        if (!isAdmin) return; // Se não for admin, bloqueia.
+        let el = document.getElementById(campo);
+        let valor = prompt("Digite o novo valor:", el.innerText);
+        
+        if (valor !== null && !isNaN(valor) && valor.trim() !== "") {
+            // Salva direto na nuvem! O onSnapshot lá de cima se vira pra atualizar a tela
+            db.collection("painel").doc("metas").update({
+                [campo]: parseFloat(valor)
+            });
+        }
+    }
+
+    /* =========================================
+       UPLOAD DE IMAGENS E FILTROS (NUVEM)
        ========================================= */
     const printInput = document.getElementById('printInput');
     const previewUpload = document.getElementById('previewUpload');
     let base64Image = "";
     let filtroAtual = "Todos";
+    let meusPrints = [];
 
+    // Lendo a imagem e OTIMIZANDO para não estourar limite da nuvem
     printInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                base64Image = event.target.result;
-                previewUpload.src = base64Image;
-                previewUpload.style.display = "block";
+                // Comprime a imagem pelo Canvas antes de salvar
+                let img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let cvs = document.createElement('canvas');
+                    let max_width = 800; // Reduz o tamanho
+                    let scale = max_width / img.width;
+                    cvs.width = max_width;
+                    cvs.height = img.height * scale;
+                    let ctxCvs = cvs.getContext('2d');
+                    ctxCvs.drawImage(img, 0, 0, cvs.width, cvs.height);
+                    
+                    // Converte em JPG com qualidade de 70%
+                    base64Image = cvs.toDataURL('image/jpeg', 0.7);
+                    previewUpload.src = base64Image;
+                    previewUpload.style.display = "block";
+                }
             };
             reader.readAsDataURL(file);
         }
     });
 
     function salvarPrint() {
+        if (!isAdmin) return;
         const tagSelect = document.getElementById('printTag');
         const tagOpcao = tagSelect.options[tagSelect.selectedIndex].text;
         const tagFiltro = tagSelect.value; 
         const desc = document.getElementById('printDesc').value.trim();
         const dataAtual = new Date().toLocaleDateString('pt-BR');
 
-        if (!base64Image) { alert("Por favor, selecione uma imagem primeiro!"); return; }
-        if (!desc) { alert("Por favor, digite uma descrição!"); return; }
+        if (!base64Image) { alert("Selecione uma imagem primeiro!"); return; }
+        if (!desc) { alert("Digite uma descrição!"); return; }
 
-        let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
-        meusPrints.unshift({ img: base64Image, tagRender: tagOpcao, tagFiltro: tagFiltro, data: dataAtual, desc: desc });
+        document.getElementById('statusTxt').innerText = "ENVIANDO PARA NUVEM...";
 
-        try {
-            localStorage.setItem('choquePrints', JSON.stringify(meusPrints));
+        db.collection("prints").add({
+            img: base64Image,
+            tagRender: tagOpcao,
+            tagFiltro: tagFiltro,
+            data: dataAtual,
+            desc: desc,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp() // Ordena pelo mais recente
+        }).then(() => {
             document.getElementById('printDesc').value = '';
-            previewUpload.src = '';
-            previewUpload.style.display = 'none';
-            base64Image = '';
-            printInput.value = '';
-            carregarPrints();
-        } catch (e) {
-            alert("A imagem é muito pesada para salvar no armazenamento local.");
-        }
+            previewUpload.src = ''; previewUpload.style.display = 'none';
+            base64Image = ''; printInput.value = '';
+            document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
+        }).catch(err => {
+            alert("Erro ao salvar! Imagem muito grande.");
+            document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
+        });
     }
+
+    // Escuta em Tempo Real os prints da nuvem
+    db.collection("prints").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        meusPrints = [];
+        snapshot.forEach((doc) => {
+            meusPrints.push({ id: doc.id, ...doc.data() });
+        });
+        carregarPrints();
+    });
 
     function aplicarFiltro(categoria, botaoClicado) {
         filtroAtual = categoria;
@@ -382,17 +392,16 @@
     function carregarPrints() {
         const container = document.getElementById('printsContainer');
         container.innerHTML = '';
-        let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
-
-        meusPrints.forEach((print, index) => {
+        
+        meusPrints.forEach((print) => {
             if (filtroAtual === "Todos" || print.tagFiltro === filtroAtual) {
                 const card = document.createElement('div');
                 card.className = 'print-card';
                 card.innerHTML = `
-                    <button class="delete-print" onclick="apagarPrint(${index})">X</button>
+                    <button class="delete-print" onclick="apagarPrint('${print.id}')">X</button>
                     <img src="${print.img}" alt="Registro" class="print-img">
                     <div class="print-info">
-                        <div class="print-tag">${print.tagRender || print.tag || 'Registro'}</div>
+                        <div class="print-tag">${print.tagRender}</div>
                         <div class="print-date">${print.data}</div>
                         <div class="print-desc">${print.desc}</div>
                     </div>
@@ -402,16 +411,45 @@
         });
     }
 
-    function apagarPrint(index) {
-        if (confirm("Tem certeza que deseja apagar este registro?")) {
-            let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
-            meusPrints.splice(index, 1);
-            localStorage.setItem('choquePrints', JSON.stringify(meusPrints));
-            carregarPrints();
+    function apagarPrint(idDoc) {
+        if (!isAdmin) return;
+        if (confirm("Apagar este registro da nuvem para sempre?")) {
+            db.collection("prints").doc(idDoc).delete();
         }
     }
 
-    carregarPrints();
+    /* =========================================
+       FUNDO CAMUFLADO CHOQUE (JS)
+       ========================================= */
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let patchesArray = [];
+    const camoColors = ['#080808', '#1a1a1a', '#2b2b2b', '#121413'];
+
+    class CamoPatch {
+        constructor() {
+            this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+            this.rx = Math.random() * 200 + 100; this.ry = Math.random() * 150 + 80;
+            this.angle = Math.random() * Math.PI * 2; this.speed = Math.random() * 0.2 + 0.05;
+            this.vx = Math.cos(this.angle) * this.speed; this.vy = Math.sin(this.angle) * this.speed;
+            this.color = camoColors[Math.floor(Math.random() * camoColors.length)];
+            this.rotationSpeed = (Math.random() - 0.5) * 0.002;
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy; this.angle += this.rotationSpeed;
+            if (this.x < -this.rx) this.x = canvas.width + this.rx;
+            if (this.x > canvas.width + this.rx) this.x = -this.rx;
+            if (this.y < -this.ry) this.y = canvas.height + this.ry;
+            if (this.y > canvas.height + this.ry) this.y = -this.ry;
+        }
+        draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.ellipse(this.x, this.y, this.rx, this.ry, this.angle, 0, Math.PI * 2); ctx.fill(); }
+    }
+
+    function initCamo() { patchesArray = []; let numPatches = Math.floor((canvas.width * canvas.height) / 30000); for (let i = 0; i < numPatches; i++) patchesArray.push(new CamoPatch()); }
+    function animateCamo() { ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < patchesArray.length; i++) { patchesArray[i].update(); patchesArray[i].draw(); } requestAnimationFrame(animateCamo); }
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; initCamo(); });
+    initCamo(); animateCamo();
 </script>
 
 </body>
