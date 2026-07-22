@@ -43,7 +43,6 @@
             100% { box-shadow: 0 0 0 0 rgba(217, 37, 37, 0), 0 0 20px rgba(0,0,0,0.8); }
         }
 
-        /* LOGO CLICÁVEL PARA LOGIN */
         .logo-container { 
             width: 100px; height: 100px; margin: 0 auto 15px auto; border-radius: 50%; 
             background: url('https://scontent.faju21-1.fna.fbcdn.net/v/t39.30808-1/272909814_4717619788351034_6969902351451184948_n.jpg?stp=dst-jpg_tt6&cstp=mx698x698&ctp=s200x200&_nc_cat=105&ccb=1-7&_nc_sid=2d3e12&_nc_eui2=AeFS2qerkmq5-9JnXnYRoofXTY8DR0wSmKxNjwNHTBKYrP6AF-Er1x6RkHMDY6TkmxdLHl1V_gdEPvsZVT4q5WWK&_nc_ohc=pt-ZW675HLcQ7kNvwHBxgGG&_nc_oc=Adq7eEqAKWTfdSe-Qtm02NA2ABVFIVbRLuSZzAS8zuxz9Vkd7Dkgbh54Vyf_6BdD-2VJiOm4pRTmyGpm57tqsQ0H&_nc_zt=24&_nc_ht=scontent.faju21-1.fna&_nc_gid=sZgUXV4CggNNaIjov7XFKA&_nc_ss=7b2a8&oh=00_AQDnkINqtn8j6tq-7NDMKl8DSI85Fqw3PRKZHKt9kd42Mw&oe=6A66177F') center/cover; 
@@ -72,9 +71,7 @@
         .goal-header { display: flex; align-items: center; gap: 10px; font-weight: 500; margin-bottom: 15px; font-size: 15px; }
         .goal-numbers { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-muted); margin-bottom: 10px; }
         
-        /* O cursor padrão para visitantes */
         .current-num, .meta-num { font-size: 30px; color: var(--text-main); font-weight: 700; transition: 0.2s; cursor: default; }
-        /* No modo admin, ele ganha o cursor clicável e o efeito hover */
         .admin-mode .current-num:hover, .admin-mode .meta-num:hover { color: var(--accent-yellow); cursor: pointer; }
         .meta-num { font-size: 22px; color: #888; }
         
@@ -97,19 +94,24 @@
         .bar-gold-flames { background: linear-gradient(90deg, #004d00, #00ff88, #00e600, #ccffcc, #004d00); background-size: 300% 300%; animation: fireGlow 0.5s ease-in-out infinite; border: 1px solid rgba(255, 255, 255, 0.4); }
         .text-gold-flames { color: #00ff88; text-shadow: 0 0 10px #00e600; font-size: 18px; }
 
-        /* MODO ADMIN: A caixa de upload ficará escondida para visitantes */
         .area-restrita { display: none; }
         .admin-mode .area-restrita { display: block; }
 
         .upload-box { background-color: rgba(28, 30, 36, 0.85); backdrop-filter: blur(5px); border: 1px dashed var(--primary-red); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
         .upload-box input[type="file"] { display: none; }
-        .upload-label { background-color: #333; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; transition: 0.3s; border: 1px solid #555; }
+        .upload-label { background-color: #333; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; display: inline-block; margin-bottom: 10px; font-size: 14px; transition: 0.3s; border: 1px solid #555; }
         .upload-label:hover { background-color: #444; }
+        
         .upload-box select, .upload-box input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background-color: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 5px; outline: none; }
         .upload-box select:focus, .upload-box input[type="text"]:focus { border-color: var(--primary-red); }
         .upload-box button { background-color: var(--primary-red); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
         .upload-box button:hover { background-color: #b20710; }
-        #previewUpload { width: 100%; max-height: 150px; object-fit: cover; margin-bottom: 15px; border-radius: 5px; display: none; }
+        
+        /* Pré-visualizações de imagens */
+        .preview-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .preview-box { display: none; flex: 1; min-width: 120px; text-align: center; }
+        .preview-box img { width: 100%; max-height: 120px; object-fit: cover; border-radius: 5px; border: 1px solid #444; }
+        .preview-box span { font-size: 12px; color: var(--accent-yellow); font-weight: bold; display: block; margin-top: 3px; }
 
         .filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .filters::-webkit-scrollbar { display: none; }
@@ -117,14 +119,20 @@
         .filter-btn.active { background-color: var(--primary-red); color: white; border-color: var(--primary-red); box-shadow: 0 0 10px rgba(217, 37, 37, 0.4); }
         
         .print-card { background-color: rgba(28, 30, 36, 0.85); backdrop-filter: blur(5px); border-radius: 12px; overflow: hidden; margin-bottom: 20px; position: relative; border: 1px solid rgba(255,255,255,0.05); }
-        .print-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #333; }
+        
+        /* Estilo para exibir 1 ou 2 imagens no card */
+        .print-images-single { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #333; }
+        .print-images-dual { display: flex; border-bottom: 1px solid #333; }
+        .print-images-dual div { flex: 1; position: relative; }
+        .print-images-dual img { width: 100%; height: 160px; object-fit: cover; display: block; }
+        .img-badge { position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: var(--accent-yellow); font-size: 11px; padding: 2px 6px; border-radius: 3px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); }
+
         .print-info { padding: 15px; }
         .print-tag { color: var(--accent-yellow); font-weight: bold; font-size: 14px; margin-bottom: 5px; }
         .print-date { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
         .print-desc { font-size: 14px; line-height: 1.4; }
         
-        /* Botão de deletar escondido de visitantes */
-        .delete-print { display: none; position: absolute; top: 10px; right: 10px; background-color: rgba(0,0,0,0.8); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
+        .delete-print { display: none; position: absolute; top: 10px; right: 10px; background-color: rgba(0,0,0,0.8); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; z-index: 10; }
         .admin-mode .delete-print { display: block; }
 
     </style>
@@ -135,7 +143,6 @@
 
 <div class="container">
     <header>
-        <!-- Clique duplo aqui para virar Admin -->
         <div class="logo-container" id="btnAdmin"></div>
         <h1>BATALHÃO CHOQUE 1BTL</h1>
         <div class="subtitle">Painel de Metas Individuais</div>
@@ -182,15 +189,36 @@
     <div class="area-restrita">
         <div class="section-title">REGISTRAR ATIVIDADE</div>
         <div class="upload-box">
-            <img id="previewUpload" src="" alt="Pré-visualização">
-            <label class="upload-label" for="printInput">📷 Escolher Print</label>
-            <input type="file" id="printInput" accept="image/*">
             
-            <select id="printTag">
+            <!-- Seletor de Categoria primeiro para adaptar os botões de upload -->
+            <select id="printTag" onchange="verificarTipoTag()">
                 <option value="Info">📊 Info</option>
                 <option value="Treinos">🏋️ Treinos</option>
                 <option value="Operação/Blitz">🚓 Operação/Blitz</option>
             </select>
+
+            <!-- Pré-visualizações -->
+            <div class="preview-container">
+                <div class="preview-box" id="boxPrev1">
+                    <img id="previewUpload1" src="" alt="Prev 1">
+                    <span id="labelPrev1">Imagem</span>
+                </div>
+                <div class="preview-box" id="boxPrev2">
+                    <img id="previewUpload2" src="" alt="Prev 2">
+                    <span>DEPOIS</span>
+                </div>
+            </div>
+
+            <!-- Botões de arquivo dinâmicos -->
+            <div id="inputsUploadArea">
+                <label class="upload-label" for="printInput1" id="labelBtn1">📷 Escolher Print</label>
+                <input type="file" id="printInput1" accept="image/*">
+
+                <div id="segundoArquivoDiv" style="display: none;">
+                    <label class="upload-label" for="printInput2">📷 Escolher Print (Depois)</label>
+                    <input type="file" id="printInput2" accept="image/*">
+                </div>
+            </div>
             
             <input type="text" id="printDesc" placeholder="Descreva a atividade...">
             <button onclick="salvarPrint()">PUBLICAR REGISTRO NA NUVEM</button>
@@ -210,10 +238,9 @@
 
 <script>
     /* ==========================================================
-       🚨 PASSO FINAL: COLE O CÓDIGO DO SEU FIREBASE AQUI ABAIXO🚨 
+       🚨 COLE O CÓDIGO DO SEU FIREBASE AQUI ABAIXO 🚨 
        ========================================================== */
     const firebaseConfig = {
-        // APAGUE AS 6 LINHAS ABAIXO E COLE A SUA CONFIGURAÇÃO QUE VOCÊ PEGOU LÁ NO FIREBASE
         apiKey: "COLE_AQUI",
         authDomain: "COLE_AQUI",
         projectId: "COLE_AQUI",
@@ -222,17 +249,14 @@
         appId: "COLE_AQUI"
     };
 
-    // Inicializa a Nuvem
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     document.getElementById("statusTxt").innerText = "SISTEMA ONLINE (NUVEM)";
 
-    /* =========================================
-       SISTEMA DE LOGIN / ADMIN
-       ========================================= */
+    /* SISTEMA ADMIN */
     let isAdmin = false;
-    const SENHA_ADMIN = "99513489"; // <-- VOCÊ PODE MUDAR SUA SENHA AQUI
+    const SENHA_ADMIN = "99513489"; 
 
     document.getElementById('btnAdmin').addEventListener('dblclick', function() {
         if (!isAdmin) {
@@ -245,17 +269,13 @@
                 alert("Senha Incorreta!");
             }
         } else {
-            // Se já for admin e der dois cliques de novo, ele desloga
             isAdmin = false;
             document.body.classList.remove('admin-mode');
             alert("Desconectado do modo Administrador.");
         }
     });
 
-    /* =========================================
-       LÓGICA DAS METAS (NUVEM)
-       ========================================= */
-    // Essa função atualiza o visual da tela
+    /* LÓGICA DAS METAS */
     function renderizarMeta(idBase, atual, meta) {
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
@@ -275,7 +295,6 @@
         else { bar.classList.add('bar-gold-flames'); pText.classList.add('text-gold-flames'); }
     }
 
-    // Escutando as metas do banco de dados em tempo real
     db.collection("painel").doc("metas").onSnapshot((doc) => {
         if (doc.exists) {
             let dados = doc.data();
@@ -283,21 +302,18 @@
             renderizarMeta('prisoes', dados.prisoesAtual || 0, dados.prisoesMeta || 25);
             renderizarMeta('treinos', dados.treinosAtual || 0, dados.treinosMeta || 20);
         } else {
-            // Se for a primeira vez que entra no site, cria os dados no banco
             db.collection("painel").doc("metas").set({
                 abatesAtual: 0, abatesMeta: 15, prisoesAtual: 0, prisoesMeta: 25, treinosAtual: 0, treinosMeta: 20
             });
         }
     });
 
-    // Função de clique ativada apenas se for Admin
     function alterarMeta(campo) {
-        if (!isAdmin) return; // Se não for admin, bloqueia.
+        if (!isAdmin) return; 
         let el = document.getElementById(campo);
         let valor = prompt("Digite o novo valor:", el.innerText);
         
         if (valor !== null && !isNaN(valor) && valor.trim() !== "") {
-            // Salva direto na nuvem! O onSnapshot lá de cima se vira pra atualizar a tela
             db.collection("painel").doc("metas").update({
                 [campo]: parseFloat(valor)
             });
@@ -305,39 +321,68 @@
     }
 
     /* =========================================
-       UPLOAD DE IMAGENS E FILTROS (NUVEM)
+       COMPORTAMENTO DINÂMICO DE UPLOAD (INFO = 2 IMAGENS)
        ========================================= */
-    const printInput = document.getElementById('printInput');
-    const previewUpload = document.getElementById('previewUpload');
-    let base64Image = "";
-    let filtroAtual = "Todos";
-    let meusPrints = [];
+    let base64Image1 = "";
+    let base64Image2 = "";
 
-    // Lendo a imagem e OTIMIZANDO para não estourar limite da nuvem
-    printInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                // Comprime a imagem pelo Canvas antes de salvar
-                let img = new Image();
-                img.src = event.target.result;
-                img.onload = function() {
-                    let cvs = document.createElement('canvas');
-                    let max_width = 800; // Reduz o tamanho
-                    let scale = max_width / img.width;
-                    cvs.width = max_width;
-                    cvs.height = img.height * scale;
-                    let ctxCvs = cvs.getContext('2d');
-                    ctxCvs.drawImage(img, 0, 0, cvs.width, cvs.height);
-                    
-                    // Converte em JPG com qualidade de 70%
-                    base64Image = cvs.toDataURL('image/jpeg', 0.7);
-                    previewUpload.src = base64Image;
-                    previewUpload.style.display = "block";
-                }
-            };
-            reader.readAsDataURL(file);
+    function verificarTipoTag() {
+        const tagValor = document.getElementById('printTag').value;
+        const segundoDiv = document.getElementById('segundoArquivoDiv');
+        const labelBtn1 = document.getElementById('labelBtn1');
+
+        if (tagValor === "Info") {
+            segundoDiv.style.display = "block";
+            labelBtn1.innerText = "📷 Escolher Print (Antes)";
+        } else {
+            segundoDiv.style.display = "none";
+            labelBtn1.innerText = "📷 Escolher Print";
+            base64Image2 = ""; // Limpa a segunda se mudar de categoria
+            document.getElementById('boxPrev2').style.display = "none";
+        }
+    }
+
+    // Função auxiliar para comprimir imagem
+    function comprimirImagem(file, callback) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            let img = new Image();
+            img.src = event.target.result;
+            img.onload = function() {
+                let cvs = document.createElement('canvas');
+                let max_width = 800; 
+                let scale = max_width / img.width;
+                cvs.width = max_width;
+                cvs.height = img.height * scale;
+                let ctxCvs = cvs.getContext('2d');
+                ctxCvs.drawImage(img, 0, 0, cvs.width, cvs.height);
+                callback(cvs.toDataURL('image/jpeg', 0.7));
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    const printInput1 = document.getElementById('printInput1');
+    const printInput2 = document.getElementById('printInput2');
+
+    printInput1.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            comprimirImagem(e.target.files[0], function(resultado) {
+                base64Image1 = resultado;
+                document.getElementById('previewUpload1').src = base64Image1;
+                document.getElementById('boxPrev1').style.display = "block";
+                document.getElementById('labelPrev1').innerText = document.getElementById('printTag').value === "Info" ? "ANTES" : "Imagem";
+            });
+        }
+    });
+
+    printInput2.addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            comprimirImagem(e.target.files[0], function(resultado) {
+                base64Image2 = resultado;
+                document.getElementById('previewUpload2').src = base64Image2;
+                document.getElementById('boxPrev2').style.display = "block";
+            });
         }
     });
 
@@ -349,22 +394,26 @@
         const desc = document.getElementById('printDesc').value.trim();
         const dataAtual = new Date().toLocaleDateString('pt-BR');
 
-        if (!base64Image) { alert("Selecione uma imagem primeiro!"); return; }
+        if (!base64Image1) { alert("Selecione pelo menos a primeira imagem!"); return; }
+        if (tagFiltro === "Info" && !base64Image2) { alert("Para a categoria Info, você precisa anexar a segunda imagem (Depois)!"); return; }
         if (!desc) { alert("Digite uma descrição!"); return; }
 
         document.getElementById('statusTxt').innerText = "ENVIANDO PARA NUVEM...";
 
         db.collection("prints").add({
-            img: base64Image,
+            img: base64Image1,
+            img2: tagFiltro === "Info" ? base64Image2 : null, // Salva a segunda imagem se for Info
             tagRender: tagOpcao,
             tagFiltro: tagFiltro,
             data: dataAtual,
             desc: desc,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp() // Ordena pelo mais recente
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
             document.getElementById('printDesc').value = '';
-            previewUpload.src = ''; previewUpload.style.display = 'none';
-            base64Image = ''; printInput.value = '';
+            document.getElementById('previewUpload1').src = ''; document.getElementById('boxPrev1').style.display = 'none';
+            document.getElementById('previewUpload2').src = ''; document.getElementById('boxPrev2').style.display = 'none';
+            base64Image1 = ""; base64Image2 = "";
+            printInput1.value = ''; printInput2.value = '';
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
         }).catch(err => {
             alert("Erro ao salvar! Imagem muito grande.");
@@ -372,7 +421,9 @@
         });
     }
 
-    // Escuta em Tempo Real os prints da nuvem
+    let filtroAtual = "Todos";
+    let meusPrints = [];
+
     db.collection("prints").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         meusPrints = [];
         snapshot.forEach((doc) => {
@@ -397,9 +448,29 @@
             if (filtroAtual === "Todos" || print.tagFiltro === filtroAtual) {
                 const card = document.createElement('div');
                 card.className = 'print-card';
+                
+                // Verifica se tem duas imagens (Info) ou apenas uma
+                let conteudoImagens = "";
+                if (print.img2) {
+                    conteudoImagens = `
+                        <div class="print-images-dual">
+                            <div>
+                                <img src="${print.img}" alt="Antes">
+                                <span class="img-badge">ANTES</span>
+                            </div>
+                            <div>
+                                <img src="${print.img2}" alt="Depois">
+                                <span class="img-badge">DEPOIS</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    conteudoImagens = `<img src="${print.img}" alt="Registro" class="print-images-single">`;
+                }
+
                 card.innerHTML = `
                     <button class="delete-print" onclick="apagarPrint('${print.id}')">X</button>
-                    <img src="${print.img}" alt="Registro" class="print-img">
+                    ${conteudoImagens}
                     <div class="print-info">
                         <div class="print-tag">${print.tagRender}</div>
                         <div class="print-date">${print.data}</div>
@@ -418,9 +489,7 @@
         }
     }
 
-    /* =========================================
-       FUNDO CAMUFLADO CHOQUE (JS)
-       ========================================= */
+    /* CAMUFLADO CANVAS */
     const canvas = document.getElementById("bgCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
