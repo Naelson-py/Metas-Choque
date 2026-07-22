@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0d10;
             --card-bg: #1c1e24;
             --primary-red: #d92525;
+            --primary-green: #00e600; /* Novo verde das metas */
             --text-main: #ffffff;
             --text-muted: #8b92a5;
             --accent-yellow: #f8c545;
@@ -18,17 +18,55 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        /* Fundo Animado com as Cores do Choque */
         body {
-            background-color: var(--bg-color); color: var(--text-main); font-family: 'Roboto', sans-serif;
+            color: var(--text-main); 
+            font-family: 'Roboto', sans-serif;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-bottom: 50px;
+            min-height: 100vh;
+            
+            /* Animação de cores escuras e vermelho Choque */
+            background: linear-gradient(-45deg, #050505, #1c0505, #0a0a0a, #150000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        /* Overlay Quadriculado Fixo */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px;
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container { width: 100%; max-width: 500px; padding: 20px; }
 
         /* HEADER */
         header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
-        .logo-container { width: 100px; height: 100px; margin: 0 auto 15px auto; border-radius: 50%; background: url('https://i.imgur.com/vH1WjYq.png') center/cover; border: 2px solid #333; box-shadow: 0 0 20px rgba(0, 200, 255, 0.2); }
+        
+        /* 🚨 SUBSTITUA O TEXTO COLE_SEU_LINK_AQUI PELO SEU LINK DA IMAGEM 🚨 */
+        .logo-container { 
+            width: 100px; 
+            height: 100px; 
+            margin: 0 auto 15px auto; 
+            border-radius: 50%; 
+            background: url('COLE_SEU_LINK_AQUI') center/cover; 
+            border: 2px solid #333; 
+            box-shadow: 0 0 20px rgba(217, 37, 37, 0.4); 
+        }
+
         h1 { font-family: 'Oswald', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 5px; }
         .subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
         .tag-efetivo { display: inline-block; border: 1px solid var(--accent-yellow); color: var(--accent-yellow); padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 15px; }
@@ -38,7 +76,7 @@
 
         /* METAS CARDS */
         .section-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 1px; margin: 30px 0 15px 0; border-left: 4px solid var(--primary-red); padding-left: 10px; }
-        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
+        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
         .goal-header { display: flex; align-items: center; gap: 10px; font-weight: 500; margin-bottom: 15px; font-size: 15px; }
         .goal-numbers { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-muted); margin-bottom: 10px; }
         .current-num, .meta-num { font-size: 30px; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
@@ -46,7 +84,16 @@
         .meta-num { font-size: 22px; color: #888; }
         
         .progress-track { width: 100%; height: 8px; background-color: #2a2d35; border-radius: 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #8b0000, #ff4d4d, #8b0000); border-radius: 5px; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); transition: width 0.5s ease-in-out; }
+        
+        /* Barra Verde Animada */
+        .progress-fill { 
+            height: 100%; 
+            background: linear-gradient(90deg, #004d00, var(--primary-green), #004d00); 
+            border-radius: 5px; 
+            box-shadow: 0 0 12px rgba(0, 230, 0, 0.5); 
+            transition: width 0.5s ease-in-out; 
+        }
+        
         .goal-percent { text-align: right; color: var(--accent-yellow); font-family: 'Oswald', sans-serif; font-size: 16px; margin-top: 8px; }
 
         /* UPLOAD DE TREINOS */
@@ -98,7 +145,7 @@
     <div class="card">
         <div class="goal-header">🚓 Prisões</div>
         <div class="goal-numbers">
-            <span class="current-num" id="prisoesAtual">30</span> / <span class="meta-num" id="prisoesMeta">25</span>
+            <span class="current-num" id="prisoesAtual">0</span> / <span class="meta-num" id="prisoesMeta">25</span>
         </div>
         <div class="progress-track"><div class="progress-fill" id="prisoesFill" style="width: 0%;"></div></div>
         <div class="goal-percent" id="prisoesPct">0%</div>
@@ -107,7 +154,7 @@
     <div class="card">
         <div class="goal-header">🏋️ Treinos</div>
         <div class="goal-numbers">
-            <span class="current-num" id="treinosAtual">15</span> / <span class="meta-num" id="treinosMeta">20</span>
+            <span class="current-num" id="treinosAtual">0</span> / <span class="meta-num" id="treinosMeta">20</span>
         </div>
         <div class="progress-track"><div class="progress-fill" id="treinosFill" style="width: 0%;"></div></div>
         <div class="goal-percent" id="treinosPct">0%</div>
@@ -133,53 +180,40 @@
 </div>
 
 <script>
-    /* =========================================
-       LÓGICA DAS METAS (Cálculo Automático)
-       ========================================= */
+    /* LÓGICA DAS METAS (Cálculo Automático) */
     function calcularPorcentagem(idBase) {
-        // Pega os valores atuais ou usa 0 e 1 por padrão
         let atual = parseFloat(localStorage.getItem(idBase + 'Atual')) || parseFloat(document.getElementById(idBase + 'Atual').innerText) || 0;
         let meta = parseFloat(localStorage.getItem(idBase + 'Meta')) || parseFloat(document.getElementById(idBase + 'Meta').innerText) || 1;
         
-        // Calcula
         let porcentagem = (atual / meta) * 100;
         
-        // Atualiza os textos na tela
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
         document.getElementById(idBase + 'Pct').innerText = porcentagem.toFixed(0) + '%';
         
-        // Atualiza a barra visual (limita a barra a 100% no visual para não quebrar a tela)
         let tamanhoBarra = porcentagem > 100 ? 100 : porcentagem;
         document.getElementById(idBase + 'Fill').style.width = tamanhoBarra + '%';
     }
 
-    // Aplica a função para as 3 categorias
     ['abates', 'prisoes', 'treinos'].forEach(idBase => {
         ['Atual', 'Meta'].forEach(tipo => {
             let elemento = document.getElementById(idBase + tipo);
-            
-            // Evento de clique para editar
             elemento.addEventListener('click', function() {
                 let valor = prompt("Digite o novo valor (apenas números):", this.innerText);
                 if (valor !== null && !isNaN(valor) && valor.trim() !== "") {
                     localStorage.setItem(this.id, valor);
-                    calcularPorcentagem(idBase); // Recalcula tudo automaticamente
+                    calcularPorcentagem(idBase); 
                 }
             });
         });
-        // Roda o cálculo assim que a página abre
         calcularPorcentagem(idBase); 
     });
 
-    /* =========================================
-       LÓGICA DE UPLOAD DE PRINTS
-       ========================================= */
+    /* LÓGICA DE UPLOAD DE PRINTS */
     const printInput = document.getElementById('printInput');
     const previewUpload = document.getElementById('previewUpload');
     let base64Image = "";
 
-    // Quando o usuário escolhe a imagem, mostra uma prévia
     printInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -193,7 +227,6 @@
         }
     });
 
-    // Função para salvar e criar o print
     function salvarPrint() {
         const tag = document.getElementById('printTag').value.trim() || "📌 Info";
         const desc = document.getElementById('printDesc').value.trim();
@@ -208,31 +241,23 @@
             return;
         }
 
-        // Puxa os prints antigos do cache, ou cria uma lista vazia
         let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
-        
-        // Adiciona o novo print no começo da lista
         meusPrints.unshift({ img: base64Image, tag: tag, data: dataAtual, desc: desc });
 
         try {
             localStorage.setItem('choquePrints', JSON.stringify(meusPrints));
-            
-            // Limpa o formulário
             document.getElementById('printTag').value = '';
             document.getElementById('printDesc').value = '';
             previewUpload.src = '';
             previewUpload.style.display = 'none';
             base64Image = '';
             printInput.value = '';
-
-            // Atualiza a lista na tela
             carregarPrints();
         } catch (e) {
             alert("A imagem é muito pesada para salvar no armazenamento local. Tente um print cortado ou com menor resolução.");
         }
     }
 
-    // Função para mostrar os prints na tela
     function carregarPrints() {
         const container = document.getElementById('printsContainer');
         container.innerHTML = '';
@@ -263,7 +288,6 @@
         }
     }
 
-    // Carrega a lista quando a página abre
     carregarPrints();
 </script>
 
