@@ -143,7 +143,7 @@
 
 <div class="container">
     <header>
-        <div class="logo-container" id="btnAdmin"></div>
+        <div class="logo-container" id="btnAdmin" title="Dê um duplo clique para logar como Admin"></div>
         <h1>BATALHÃO CHOQUE 1BTL</h1>
         <div class="subtitle">Painel de Metas Individuais</div>
         <div class="tag-efetivo">Efetivo: [GT]Wesley1BTL</div>
@@ -185,19 +185,18 @@
         </div>
     </div>
 
-    <!-- AREA RESTRITA A ADMIN (Upload) -->
+    <!-- AREA RESTRITA A ADMIN (Upload direto pela Home) -->
     <div class="area-restrita">
         <div class="section-title">REGISTRAR ATIVIDADE</div>
         <div class="upload-box">
             
-            <!-- Seletor de Categoria primeiro para adaptar os botões de upload -->
             <select id="printTag" onchange="verificarTipoTag()">
-                <option value="Info">📊 Info</option>
+                <option value="Info">📊 Info (Antes e Depois)</option>
                 <option value="Treinos">🏋️ Treinos</option>
                 <option value="Operação/Blitz">🚓 Operação/Blitz</option>
             </select>
 
-            <!-- Pré-visualizações -->
+            <!-- Pré-visualizações das imagens carregadas -->
             <div class="preview-container">
                 <div class="preview-box" id="boxPrev1">
                     <img id="previewUpload1" src="" alt="Prev 1">
@@ -209,12 +208,12 @@
                 </div>
             </div>
 
-            <!-- Botões de arquivo dinâmicos -->
+            <!-- Botões de seleção de arquivo -->
             <div id="inputsUploadArea">
-                <label class="upload-label" for="printInput1" id="labelBtn1">📷 Escolher Print</label>
+                <label class="upload-label" for="printInput1" id="labelBtn1">📷 Escolher Print (Antes)</label>
                 <input type="file" id="printInput1" accept="image/*">
 
-                <div id="segundoArquivoDiv" style="display: none;">
+                <div id="segundoArquivoDiv" style="display: block;">
                     <label class="upload-label" for="printInput2">📷 Escolher Print (Depois)</label>
                     <input type="file" id="printInput2" accept="image/*">
                 </div>
@@ -238,7 +237,7 @@
 
 <script>
     /* ==========================================================
-       🚨 COLE O CÓDIGO DO SEU FIREBASE AQUI ABAIXO 🚨 
+        🚨 COLOQUE SUA CONFIGURAÇÃO DO FIREBASE AQUI 🚨 
        ========================================================== */
     const firebaseConfig = {
         apiKey: "COLE_AQUI",
@@ -337,12 +336,12 @@
         } else {
             segundoDiv.style.display = "none";
             labelBtn1.innerText = "📷 Escolher Print";
-            base64Image2 = ""; // Limpa a segunda se mudar de categoria
+            base64Image2 = ""; 
             document.getElementById('boxPrev2').style.display = "none";
         }
     }
 
-    // Função auxiliar para comprimir imagem
+    // Função para comprimir a imagem antes de enviar à nuvem (evita estourar o limite do Firestore)
     function comprimirImagem(file, callback) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -402,7 +401,7 @@
 
         db.collection("prints").add({
             img: base64Image1,
-            img2: tagFiltro === "Info" ? base64Image2 : null, // Salva a segunda imagem se for Info
+            img2: tagFiltro === "Info" ? base64Image2 : null, 
             tagRender: tagOpcao,
             tagFiltro: tagFiltro,
             data: dataAtual,
@@ -415,6 +414,7 @@
             base64Image1 = ""; base64Image2 = "";
             printInput1.value = ''; printInput2.value = '';
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
+            alert("Registro publicado com sucesso na nuvem para todos os visitantes!");
         }).catch(err => {
             alert("Erro ao salvar! Imagem muito grande.");
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
@@ -449,7 +449,6 @@
                 const card = document.createElement('div');
                 card.className = 'print-card';
                 
-                // Verifica se tem duas imagens (Info) ou apenas uma
                 let conteudoImagens = "";
                 if (print.img2) {
                     conteudoImagens = `
@@ -469,7 +468,7 @@
                 }
 
                 card.innerHTML = `
-                    <button class="delete-print" onclick="apagarPrint('${print.id}')">X</button>
+                    <button class="delete-print" onclick="apagarPrint('${print.id}')" title="Apagar post">X</button>
                     ${conteudoImagens}
                     <div class="print-info">
                         <div class="print-tag">${print.tagRender}</div>
@@ -489,7 +488,7 @@
         }
     }
 
-    /* CAMUFLADO CANVAS */
+    /* CAMUFLADO CANVAS DE FUNDO */
     const canvas = document.getElementById("bgCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
