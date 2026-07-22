@@ -108,6 +108,8 @@
         .text-red { color: #ff3333; text-shadow: 0 0 5px rgba(255, 51, 51, 0.4); }
         .bar-yellow { background: linear-gradient(90deg, #806600, #ffcc00, #806600); box-shadow: 0 0 12px rgba(255, 204, 0, 0.5); }
         .text-yellow { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
+        .bar-green { background: linear-gradient(90deg, #004d00, #00e600, #004d00); box-shadow: 0 0 12px rgba(0, 230, 0, 0.5); }
+        .text-green { color: #00e600; text-shadow: 0 0 5px rgba(0, 230, 0, 0.4); }
         
         /* Efeito Fogo Verde EXCLUSIVO para exatamente 100% */
         @keyframes greenFireBurn {
@@ -340,7 +342,7 @@
         }
     });
 
-    /* LÓGICA DAS METAS (100% = VERDE FOGO, > 101% = DOURADO FOGO) */
+    /* LÓGICA DAS METAS CORRIGIDA (50% A 99% VERDE FIXO, 100% VERDE FOGO, >101% DOURADO FOGO) */
     function renderizarMeta(idBase, atual, meta) {
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
@@ -358,14 +360,15 @@
             bar.classList.add('bar-red'); pText.classList.add('text-red'); 
         } else if (porcentagem < 50) { 
             bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); 
+        } else if (porcentagem >= 50 && porcentagem < 100) { 
+            // De 50% a 99%: Fica Verde sólido
+            bar.classList.add('bar-green'); pText.classList.add('text-green'); 
         } else if (porcentagem === 100) { 
             // Exatamente 100%: Verde piscando pegando fogo
             bar.classList.add('bar-green-fire'); pText.classList.add('text-green-fire'); 
-        } else if (porcentagem > 100) { 
-            // Acima de 101%: Dourado piscando pegando fogo
-            bar.classList.add('bar-gold-fire'); pText.classList.add('text-gold-fire'); 
         } else { 
-            bar.classList.add('bar-green'); pText.classList.add('text-green'); 
+            // Acima de 100%: Dourado piscando pegando fogo
+            bar.classList.add('bar-gold-fire'); pText.classList.add('text-gold-fire'); 
         }
     }
 
