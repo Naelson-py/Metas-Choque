@@ -24,14 +24,14 @@
         body {
             color: var(--text-main); font-family: 'Roboto', sans-serif;
             display: flex; flex-direction: column; align-items: center; 
-            padding-bottom: 50px; min-height: 100vh; background-color: #000000; overflow-x: hidden;
+            padding-bottom: 50px; min-height: 100vh; background-color: #030303; overflow-x: hidden;
         }
 
-        /* Canvas de Fundo para animação de tiros cruzando a tela inteira */
-        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
+        /* Canvas de Fundo: Camuflagem Tática nas Cores da Choque (Fixa e Nítida) */
+        #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; filter: blur(6px); transform: scale(1.02); opacity: 0.9; }
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
             background-size: 30px 30px; z-index: -1; pointer-events: none;
         }
 
@@ -111,20 +111,20 @@
         .bar-green { background: linear-gradient(90deg, #004d00, #00e600, #004d00); box-shadow: 0 0 12px rgba(0, 230, 0, 0.5); }
         .text-green { color: #00e600; text-shadow: 0 0 5px rgba(0, 230, 0, 0.4); }
         
-        /* Efeito FOGO para metas acima de 100% */
-        @keyframes fireBurn {
-            0% { background-position: 0% 50%; box-shadow: 0 0 15px #ff2200, 0 0 5px #ffaa00 inset; }
-            50% { background-position: 100% 50%; box-shadow: 0 0 25px #ff5500, 0 0 12px #ffff00 inset; }
-            100% { background-position: 0% 50%; box-shadow: 0 0 15px #ff2200, 0 0 5px #ffaa00 inset; }
+        /* Efeito Dourado/Fogo EXCLUSIVO para acima de 100% */
+        @keyframes goldFireBurn {
+            0% { background-position: 0% 50%; box-shadow: 0 0 15px #ffaa00, 0 0 5px #ffd700 inset; }
+            50% { background-position: 100% 50%; box-shadow: 0 0 25px #ffcc00, 0 0 12px #ffffff inset; }
+            100% { background-position: 0% 50%; box-shadow: 0 0 15px #ffaa00, 0 0 5px #ffd700 inset; }
         }
-        .bar-fire { background: linear-gradient(90deg, #550000, #ff2200, #ff8800, #ffff00, #ff2200); background-size: 300% 300%; animation: fireBurn 0.4s ease-in-out infinite; border: 1px solid rgba(255, 100, 0, 0.6); }
+        .bar-gold-fire { background: linear-gradient(90deg, #806600, #ffcc00, #ffaa00, #ffffff, #ffcc00); background-size: 300% 300%; animation: goldFireBurn 0.4s ease-in-out infinite; border: 1px solid rgba(255, 215, 0, 0.8); }
         
-        @keyframes textFireAnim {
-            0% { color: #ff3300; text-shadow: 0 0 8px #ff0000, 0 0 20px #ff6600; transform: scale(1); }
-            50% { color: #ffbb00; text-shadow: 0 0 15px #ff6600, 0 0 30px #ffea00; transform: scale(1.06); }
-            100% { color: #ff3300; text-shadow: 0 0 8px #ff0000, 0 0 20px #ff6600; transform: scale(1); }
+        @keyframes textGoldFireAnim {
+            0% { color: #ffcc00; text-shadow: 0 0 8px #ff9900, 0 0 20px #ffcc00; transform: scale(1); }
+            50% { color: #ffffff; text-shadow: 0 0 15px #ffaa00, 0 0 30px #ffff00; transform: scale(1.06); }
+            100% { color: #ffcc00; text-shadow: 0 0 8px #ff9900, 0 0 20px #ffcc00; transform: scale(1); }
         }
-        .text-fire { animation: textFireAnim 0.4s infinite; display: inline-block; }
+        .text-gold-fire { animation: textGoldFireAnim 0.4s infinite; display: inline-block; }
 
         .area-restrita { display: none; }
         .admin-mode .area-restrita { display: block; }
@@ -180,7 +180,7 @@
 </head>
 <body>
 
-<!-- CANVAS DE FUNDO PARA OS TIROS CRUZANDO A TELA -->
+<!-- CANVAS DE FUNDO FIXO COM A CAMUFLAGEM NAS CORES DA CHOQUE -->
 <canvas id="bgCanvas"></canvas>
 
 <!-- MODAL DE ZOOM DE IMAGEM -->
@@ -327,7 +327,7 @@
         }
     });
 
-    /* LÓGICA DAS METAS COM EFEITO DE FOGO ACIMA DE 100% */
+    /* LÓGICA DAS METAS (100% SÓLIDO E > 100% PISCANDO EM DOURADO/FOGO) */
     function renderizarMeta(idBase, atual, meta) {
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
@@ -341,10 +341,16 @@
         bar.style.width = tamanhoBarra + '%';
         bar.className = 'progress-fill'; pText.className = 'goal-percent'; 
         
-        if (porcentagem < 20) { bar.classList.add('bar-red'); pText.classList.add('text-red'); } 
-        else if (porcentagem < 50) { bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); } 
-        else if (porcentagem < 100) { bar.classList.add('bar-green'); pText.classList.add('text-green'); } 
-        else { bar.classList.add('bar-fire'); pText.classList.add('text-fire'); }
+        if (porcentagem < 20) { 
+            bar.classList.add('bar-red'); pText.classList.add('text-red'); 
+        } else if (porcentagem < 50) { 
+            bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); 
+        } else if (porcentagem <= 100) { 
+            bar.classList.add('bar-green'); pText.classList.add('text-green'); 
+        } else { 
+            // Apenas quando ultrapassar 100% ativa o efeito piscante dourado/fogo
+            bar.classList.add('bar-gold-fire'); pText.classList.add('text-gold-fire'); 
+        }
     }
 
     db.collection("painel").doc("metas").onSnapshot((doc) => {
@@ -394,7 +400,6 @@
         }
     }
 
-    // Função de compressão otimizada para evitar erro de arquivo grande
     function comprimirImagem(file, callback) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -526,7 +531,7 @@
                     ${conteudoImagens}
                     <div class="print-info">
                         <div class="print-tag">${print.tagRender}</div>
-                        <div class="print-date">${print.date}</div>
+                        <div class="print-date">${print.data}</div>
                         <div class="print-desc">${print.desc}</div>
                     </div>
                 `;
@@ -552,80 +557,42 @@
         document.getElementById('imageModal').style.display = 'none';
     }
 
-    /* ANIMAÇÃO DE TIROS CRUZANDO A TELA INTEIRA (FUNDO PRETO) */
+    /* CANVAS ESTÁTICO: CAMUFLAGEM NÍDITA NAS CORES DA CHOQUE (SEM ANIMAÇÃO DE FUNDO) */
     const canvas = document.getElementById("bgCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
 
-    let bullets = [];
+    // Cores táticas da Choque (Preto, Cinza Chumbo e Vermelho Sutil)
+    const choqueColors = ['#0e1012', '#181b20', '#22262d', '#2c1212', '#131519'];
 
-    class Bullet {
-        constructor() {
-            this.reset();
-        }
-        reset() {
-            // Começa de um lado aleatório da tela e vai para o outro (tiros cruzando sem obstáculos)
-            this.x = Math.random() < 0.5 ? -50 : canvas.width + 50;
-            this.y = Math.random() * canvas.height;
-            const targetX = this.x < 0 ? canvas.width + 50 : -50;
-            const targetY = Math.random() * canvas.height;
-            
-            const angle = Math.atan2(targetY - this.y, targetX - this.x);
-            const speed = Math.random() * 8 + 6; // Velocidade rápida estilo projétil
-            
-            this.vx = Math.cos(angle) * speed;
-            this.vy = Math.sin(angle) * speed;
-            this.length = Math.random() * 25 + 15; // Comprimento do rastro do tiro
-            this.color = Math.random() < 0.2 ? '#f8c545' : '#ff3300'; // Maioria vermelhos com alguns amarelos traçantes
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-
-            // Se sair da tela, recria o tiro em outro ponto
-            if (this.x < -100 || this.x > canvas.width + 100 || this.y < -100 || this.y > canvas.height + 100) {
-                this.reset();
-            }
-        }
-        draw() {
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            let tailX = this.x - this.vx * (this.length / 5);
-            let tailY = this.y - this.vy * (this.length / 5);
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(tailX, tailY);
-            ctx.stroke();
-        }
-    }
-
-    function initBullets() {
-        bullets = [];
-        let numBullets = 25; // Quantidade perfeita de tiros simultâneos cruzando a tela
-        for (let i = 0; i < numBullets; i++) {
-            bullets.push(new Bullet());
-        }
-    }
-
-    function animateBullets() {
-        ctx.fillStyle = '#000000'; // Fundo preto puro
+    function desenharFundoCamuflado() {
+        ctx.fillStyle = '#060708';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        for (let i = 0; i < bullets.length; i++) {
-            bullets[i].update();
-            bullets[i].draw();
+        // Gera manchas fixas de camuflagem tática espalhadas pela tela
+        let numManchas = Math.floor((canvas.width * canvas.height) / 14000);
+        for (let i = 0; i < numManchas; i++) {
+            let x = (i * 37) % canvas.width;
+            let y = (i * 73) % canvas.height;
+            let rx = 120 + ((i * 19) % 80);
+            let ry = 80 + ((i * 31) % 60);
+            let angle = (i * 11) % (Math.PI * 2);
+
+            ctx.fillStyle = choqueColors[i % choqueColors.length];
+            ctx.beginPath();
+            ctx.ellipse(x, y, rx, ry, angle, 0, Math.PI * 2);
+            ctx.fill();
         }
-        requestAnimationFrame(animateBullets);
     }
 
     window.addEventListener('resize', () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        desenharFundoCamuflado();
     });
 
-    initBullets();
-    animateBullets();
+    desenharFundoCamuflado();
 </script>
 
 </body>
