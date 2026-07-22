@@ -1,141 +1,392 @@
-HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Comando - 1º BTL</title>
-  <style>
-    /* Estilo Base Tático */
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Impact', 'Arial Black', sans-serif; letter-spacing: 1px; }
-    body { background-color: #0d0d0d; color: #d4d4d4; display: flex; flex-direction: column; align-items: center; padding: 20px; text-transform: uppercase; }
-    
-    header { margin-bottom: 30px; text-align: center; border-bottom: 2px solid #8b0000; padding-bottom: 15px; width: 100%; max-width: 700px; }
-    header h1 { color: #ffffff; font-size: 2.5rem; text-shadow: 2px 2px 5px rgba(255, 0, 0, 0.5); }
-    header p { color: #888; font-family: Arial, sans-serif; letter-spacing: 0; font-size: 0.9rem; margin-top: 5px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalhão Choque 1BTL - Painel</title>
+    <!-- Fontes do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0d10;
+            --card-bg: #1c1e24;
+            --primary-red: #d92525;
+            --text-main: #ffffff;
+            --text-muted: #8b92a5;
+            --accent-yellow: #f8c545;
+        }
 
-    .container { width: 100%; max-width: 700px; background-color: #1a1a1a; padding: 25px; border: 1px solid #333; border-left: 5px solid #8b0000; box-shadow: 0 5px 15px rgba(0,0,0,0.8); margin-bottom: 25px; }
-    .container h2 { color: #fff; margin-bottom: 15px; font-size: 1.5rem; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* Upload de Imagem (Brasão/Foto) */
-    .image-section { text-align: center; }
-    .image-preview { width: 100%; max-width: 200px; height: 200px; margin: 0 auto 15px auto; background-color: #0d0d0d; border: 2px solid #444; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-    .image-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .image-preview span { font-family: Arial, sans-serif; font-size: 0.8rem; color: #555; text-align: center; padding: 10px; }
-    
-    .file-input-label { background-color: #8b0000; color: white; padding: 10px 20px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; display: inline-block; }
-    .file-input-label:hover { background-color: #5a0000; }
-    input[type="file"] { display: none; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            /* Fundo quadriculado tático */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 50px;
+        }
 
-    /* Missões / Metas */
-    .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-    input[type="text"] { flex: 1; padding: 15px; border: 1px solid #444; background-color: #0d0d0d; color: white; outline: none; font-family: Arial, sans-serif; letter-spacing: 0; }
-    input[type="text"]:focus { border-color: #8b0000; }
-    
-    button { background-color: #333; color: white; border: 1px solid #555; padding: 12px 20px; cursor: pointer; transition: 0.3s; font-size: 1rem; }
-    button:hover { background-color: #8b0000; border-color: #8b0000; }
-    
-    ul { list-style: none; padding: 0; }
-    li { background-color: #222; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #555; font-family: Arial, sans-serif; letter-spacing: 0; text-transform: none; }
-    li:hover { border-left-color: #8b0000; background-color: #2a2a2a; }
-    
-    .delete-btn { background-color: transparent; color: #8b0000; border: none; font-weight: bold; font-size: 1.2rem; }
-    .delete-btn:hover { background-color: transparent; color: #ff4d4d; }
-  </style>
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+        }
+        
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            background: url('https://i.imgur.com/vH1WjYq.png') center/cover; /* Substitua pelo link da sua logo arredondada */
+            border: 2px solid #333;
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.2);
+        }
+
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .tag-efetivo {
+            display: inline-block;
+            border: 1px solid var(--accent-yellow);
+            color: var(--accent-yellow);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .status-online {
+            font-family: 'Oswald', sans-serif;
+            color: #00ff88;
+            font-size: 14px;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .divider {
+            height: 2px;
+            background-color: var(--primary-red);
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        /* BANNER SECUNDÁRIO */
+        .banner-metas {
+            width: 100%;
+            height: 120px;
+            background: url('https://i.imgur.com/w4mZ1iJ.png') center/contain no-repeat; /* Link do banner Metas 1BTL */
+            margin-bottom: 30px;
+        }
+
+        /* PROGRESSO GERAL */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .text-yellow {
+            color: var(--accent-yellow);
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background-color: #2a2d35;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b0000, #ff4d4d, #8b0000);
+            width: 100%; /* Ajuste a porcentagem aqui */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* TÍTULOS DE SEÇÃO */
+        .section-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            letter-spacing: 1px;
+            margin: 30px 0 15px 0;
+            border-left: 4px solid var(--primary-red);
+            padding-left: 10px;
+        }
+
+        /* METAS CARDS */
+        .goal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .goal-numbers {
+            font-family: 'Oswald', sans-serif;
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .current-num {
+            font-size: 36px;
+            color: var(--text-main);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .goal-percent {
+            text-align: right;
+            color: var(--accent-yellow);
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        /* REGISTROS / PRINTS */
+        .filters {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .filters::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background-color: transparent;
+            border: 1px solid #333;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+        }
+
+        .print-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .print-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid #333;
+        }
+
+        .print-info {
+            padding: 15px;
+        }
+
+        .print-tag {
+            color: var(--accent-yellow);
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .print-date {
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .print-desc {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+    </style>
 </head>
 <body>
 
-  <header>
-    <h1>Batalhão de Choque - 1º BTL</h1>
-    <p>Painel de Controle Tático e Diretrizes de Operação</p>
-  </header>
+<div class="container">
+    
+    <header>
+        <div class="logo-container"></div>
+        <h1>BATALHÃO CHOQUE 1BTL</h1>
+        <div class="subtitle">Painel de Metas Individuais</div>
+        <div class="tag-efetivo">Efetivo: [GT]Wesley1BTL</div>
+        <div class="status-online"><div class="status-dot"></div> SISTEMA ONLINE</div>
+    </header>
 
-  <!-- Brasão / Foto de Farda -->
-  <div class="container image-section">
-    <h2>Identificação Visual</h2>
-    <div class="image-preview" id="imagePreviewContainer">
-      <span id="placeholderText">Sem Brasão/Foto</span>
-      <img id="previewImage" src="" alt="Identificação">
+    <div class="divider"></div>
+
+    <div class="banner-metas"></div>
+
+    <!-- PROGRESSO GERAL -->
+    <div class="card">
+        <div class="flex-between">
+            <span>PROGRESSO GERAL</span> 
+            <span class="text-yellow editable" id="progGeral">535%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
     </div>
-    <label class="file-input-label" for="imageInput">Carregar Arquivo</label>
-    <input type="file" id="imageInput" accept="image/*">
-  </div>
 
-  <!-- Missões (Metas) -->
-  <div class="container">
-    <h2>Quadro de Missões</h2>
-    <div class="input-group">
-      <input type="text" id="goalInput" placeholder="Ex: Farmar build da Acceltra / Revisar motor Fivetech do Marea sedan...">
-      <button onclick="addGoal()">REGISTRAR</button>
+    <!-- METAS -->
+    <div class="section-title">METAS</div>
+
+    <div class="card">
+        <div class="goal-header">🎯 Abates de Traficantes</div>
+        <div class="goal-numbers">
+            <span class="current-num editable" id="abatesAtual">124</span> / <span class="editable" id="abatesMeta">15</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <div class="goal-percent editable" id="abatesPct">827%</div>
     </div>
-    <ul id="goalList"></ul>
-  </div>
 
-  <script>
-    let goals = JSON.parse(localStorage.getItem('choqueGoals')) || [];
-    const goalList = document.getElementById('goalList');
-    const goalInput = document.getElementById('goalInput');
+    <div class="card">
+        <div class="goal-header">🚓 Prisões</div>
+        <div class="goal-numbers">
+            <span class="current-num editable" id="prisoesAtual">177</span> / <span class="editable" id="prisoesMeta">25</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <div class="goal-percent editable" id="prisoesPct">708%</div>
+    </div>
 
-    function renderGoals() {
-      goalList.innerHTML = '';
-      goals.forEach((goal, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${goal}</span>
-          <button class="delete-btn" onclick="removeGoal(${index})">X</button>
-        `;
-        goalList.appendChild(li);
-      });
-    }
+    <div class="card">
+        <div class="goal-header">🏋️ Treinos</div>
+        <div class="goal-numbers">
+            <span class="current-num editable" id="treinosAtual">20</span> / <span class="editable" id="treinosMeta">20</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <div class="goal-percent editable" id="treinosPct">100%</div>
+    </div>
 
-    function addGoal() {
-      const newGoal = goalInput.value.trim();
-      if (newGoal !== '') {
-        goals.push(newGoal);
-        localStorage.setItem('choqueGoals', JSON.stringify(goals));
-        goalInput.value = '';
-        renderGoals();
-      }
-    }
+    <!-- REGISTROS / PRINTS -->
+    <div class="section-title">REGISTROS / PRINTS</div>
+    
+    <div class="filters">
+        <button class="filter-btn active">Todos</button>
+        <button class="filter-btn">Treinos</button>
+        <button class="filter-btn">Operação/Blitz</button>
+        <button class="filter-btn">Info</button>
+    </div>
 
-    function removeGoal(index) {
-      goals.splice(index, 1);
-      localStorage.setItem('choqueGoals', JSON.stringify(goals));
-      renderGoals();
-    }
+    <!-- Print Card 1 -->
+    <div class="print-card">
+        <!-- Substitua o src abaixo pelo link da sua imagem -->
+        <img src="https://i.imgur.com/KxXjH8C.jpg" alt="Print" class="print-img">
+        <div class="print-info">
+            <div class="print-tag">📊 Info</div>
+            <div class="print-date">18/07/2026 a 21/07/2026</div>
+            <div class="print-desc">Comprovação de progresso: Abates de Traficantes 91 -> 215, Prisões efetuadas 137 -> 314</div>
+        </div>
+    </div>
 
-    const imageInput = document.getElementById('imageInput');
-    const previewImage = document.getElementById('previewImage');
-    const placeholderText = document.getElementById('placeholderText');
+    <!-- Print Card 2 -->
+    <div class="print-card">
+        <img src="https://i.imgur.com/YvVpZkU.jpg" alt="Print" class="print-img">
+        <div class="print-info">
+            <div class="print-tag">🏋️ Treinos</div>
+            <div class="print-date">21/07/2026</div>
+            <div class="print-desc">Treino com Tenente Coronel Skinka #15 - 15 treinos concluídos, meta batida!</div>
+        </div>
+    </div>
 
-    const savedImage = localStorage.getItem('choqueImage');
-    if (savedImage) {
-      previewImage.src = savedImage;
-      previewImage.style.display = 'block';
-      placeholderText.style.display = 'none';
-    }
+</div>
 
-    imageInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const imageDataUrl = e.target.result;
-          previewImage.src = imageDataUrl;
-          previewImage.style.display = 'block';
-          placeholderText.style.display = 'none';
-          
-          try {
-            localStorage.setItem('choqueImage', imageDataUrl);
-          } catch (error) {
-            alert('A imagem é muito pesada para salvar no cache local do navegador.');
-          }
-        };
-        reader.readAsDataURL(file);
-      }
+<script>
+    // Função para tornar os números editáveis clicando neles
+    document.querySelectorAll('.editable').forEach(item => {
+        // Carrega o valor salvo no navegador, se existir
+        const savedValue = localStorage.getItem(item.id);
+        if (savedValue) {
+            item.innerText = savedValue;
+        }
+
+        // Adiciona o evento de clique para editar
+        item.addEventListener('click', function() {
+            let newValue = prompt("Atualizar valor para:", this.innerText);
+            if (newValue !== null && newValue.trim() !== "") {
+                this.innerText = newValue;
+                // Salva no armazenamento local do navegador
+                localStorage.setItem(this.id, newValue);
+            }
+        });
     });
+</script>
 
-    renderGoals();
-  </script>
 </body>
 </html>
