@@ -16,376 +16,255 @@
             --accent-yellow: #f8c545;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Roboto', sans-serif;
-            /* Fundo quadriculado tático */
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 50px;
+            background-color: var(--bg-color); color: var(--text-main); font-family: 'Roboto', sans-serif;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; display: flex; flex-direction: column; align-items: center; padding-bottom: 50px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-        }
+        .container { width: 100%; max-width: 500px; padding: 20px; }
 
         /* HEADER */
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-top: 20px;
-        }
-        
-        .logo-container {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 15px auto;
-            border-radius: 50%;
-            background: url('https://i.imgur.com/vH1WjYq.png') center/cover; /* Substitua pelo link da sua logo arredondada */
-            border: 2px solid #333;
-            box-shadow: 0 0 20px rgba(0, 200, 255, 0.2);
-        }
-
-        h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 28px;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        .tag-efetivo {
-            display: inline-block;
-            border: 1px solid var(--accent-yellow);
-            color: var(--accent-yellow);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .status-online {
-            font-family: 'Oswald', sans-serif;
-            color: #00ff88;
-            font-size: 14px;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #00ff88;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ff88;
-        }
-
-        .divider {
-            height: 2px;
-            background-color: var(--primary-red);
-            width: 100%;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        /* BANNER SECUNDÁRIO */
-        .banner-metas {
-            width: 100%;
-            height: 120px;
-            background: url('https://i.imgur.com/w4mZ1iJ.png') center/contain no-repeat; /* Link do banner Metas 1BTL */
-            margin-bottom: 30px;
-        }
-
-        /* PROGRESSO GERAL */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 18px;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
-
-        .text-yellow {
-            color: var(--accent-yellow);
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 8px;
-            background-color: #2a2d35;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #8b0000, #ff4d4d, #8b0000);
-            width: 100%; /* Ajuste a porcentagem aqui */
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        /* TÍTULOS DE SEÇÃO */
-        .section-title {
-            font-family: 'Oswald', sans-serif;
-            font-size: 22px;
-            letter-spacing: 1px;
-            margin: 30px 0 15px 0;
-            border-left: 4px solid var(--primary-red);
-            padding-left: 10px;
-        }
+        header { text-align: center; margin-bottom: 30px; padding-top: 20px; }
+        .logo-container { width: 100px; height: 100px; margin: 0 auto 15px auto; border-radius: 50%; background: url('https://i.imgur.com/vH1WjYq.png') center/cover; border: 2px solid #333; box-shadow: 0 0 20px rgba(0, 200, 255, 0.2); }
+        h1 { font-family: 'Oswald', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 5px; }
+        .subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
+        .tag-efetivo { display: inline-block; border: 1px solid var(--accent-yellow); color: var(--accent-yellow); padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 15px; }
+        .status-online { font-family: 'Oswald', sans-serif; color: #00ff88; font-size: 14px; letter-spacing: 2px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .status-dot { width: 8px; height: 8px; background-color: #00ff88; border-radius: 50%; box-shadow: 0 0 10px #00ff88; }
+        .divider { height: 2px; background-color: var(--primary-red); width: 100%; margin: 20px 0; }
 
         /* METAS CARDS */
-        .goal-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
+        .section-title { font-family: 'Oswald', sans-serif; font-size: 22px; letter-spacing: 1px; margin: 30px 0 15px 0; border-left: 4px solid var(--primary-red); padding-left: 10px; }
+        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
+        .goal-header { display: flex; align-items: center; gap: 10px; font-weight: 500; margin-bottom: 15px; font-size: 15px; }
+        .goal-numbers { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text-muted); margin-bottom: 10px; }
+        .current-num, .meta-num { font-size: 30px; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .current-num:hover, .meta-num:hover { color: var(--accent-yellow); }
+        .meta-num { font-size: 22px; color: #888; }
+        
+        .progress-track { width: 100%; height: 8px; background-color: #2a2d35; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #8b0000, #ff4d4d, #8b0000); border-radius: 5px; box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); transition: width 0.5s ease-in-out; }
+        .goal-percent { text-align: right; color: var(--accent-yellow); font-family: 'Oswald', sans-serif; font-size: 16px; margin-top: 8px; }
 
-        .goal-numbers {
-            font-family: 'Oswald', sans-serif;
-            font-size: 18px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .current-num {
-            font-size: 36px;
-            color: var(--text-main);
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .goal-percent {
-            text-align: right;
-            color: var(--accent-yellow);
-            font-family: 'Oswald', sans-serif;
-            font-size: 16px;
-            margin-top: 8px;
-            cursor: pointer;
-        }
+        /* UPLOAD DE TREINOS */
+        .upload-box { background-color: rgba(217, 37, 37, 0.05); border: 1px dashed var(--primary-red); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
+        .upload-box input[type="file"] { display: none; }
+        .upload-label { background-color: #333; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; transition: 0.3s; }
+        .upload-label:hover { background-color: #555; }
+        .upload-box input[type="text"] { width: 100%; padding: 12px; margin-bottom: 15px; background-color: #111; border: 1px solid #333; color: white; border-radius: 5px; outline: none; }
+        .upload-box input[type="text"]:focus { border-color: var(--primary-red); }
+        .upload-box button { background-color: var(--primary-red); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 1px; }
+        .upload-box button:hover { background-color: #b20710; }
+        #previewUpload { width: 100%; max-height: 150px; object-fit: cover; margin-bottom: 15px; border-radius: 5px; display: none; }
 
         /* REGISTROS / PRINTS */
-        .filters {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .filters::-webkit-scrollbar { display: none; }
-
-        .filter-btn {
-            background-color: transparent;
-            border: 1px solid #333;
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .filter-btn.active {
-            background-color: var(--primary-red);
-            color: white;
-            border-color: var(--primary-red);
-        }
-
-        .print-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .print-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-bottom: 1px solid #333;
-        }
-
-        .print-info {
-            padding: 15px;
-        }
-
-        .print-tag {
-            color: var(--accent-yellow);
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .print-date {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-
-        .print-desc {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
+        .print-card { background-color: var(--card-bg); border-radius: 12px; overflow: hidden; margin-bottom: 20px; position: relative; }
+        .print-img { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #333; }
+        .print-info { padding: 15px; }
+        .print-tag { color: var(--accent-yellow); font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .print-date { color: var(--text-muted); font-size: 12px; margin-bottom: 10px; }
+        .print-desc { font-size: 14px; line-height: 1.4; }
+        .delete-print { position: absolute; top: 10px; right: 10px; background-color: rgba(0,0,0,0.7); color: #ff4d4d; border: 1px solid #ff4d4d; border-radius: 5px; padding: 5px 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
     <header>
         <div class="logo-container"></div>
         <h1>BATALHÃO CHOQUE 1BTL</h1>
         <div class="subtitle">Painel de Metas Individuais</div>
-        <div class="tag-efetivo">Efetivo: [TJF]ReSTo.Bdo[1BTL]</div>
+        <div class="tag-efetivo">Efetivo: [GT]Wesley1BTL</div>
         <div class="status-online"><div class="status-dot"></div> SISTEMA ONLINE</div>
     </header>
 
     <div class="divider"></div>
 
-    <div class="banner-metas"></div>
-
-    <!-- PROGRESSO GERAL -->
-    <div class="card">
-        <div class="flex-between">
-            <span>PROGRESSO GERAL</span> 
-            <span class="text-yellow editable" id="progGeral">535%</span>
-        </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-    </div>
-
     <!-- METAS -->
-    <div class="section-title">METAS</div>
+    <div class="section-title">METAS ATIVAS</div>
 
     <div class="card">
         <div class="goal-header">🎯 Abates de Traficantes</div>
         <div class="goal-numbers">
-            <span class="current-num editable" id="abatesAtual">124</span> / <span class="editable" id="abatesMeta">0</span>
+            <span class="current-num" id="abatesAtual">0</span> / <span class="meta-num" id="abatesMeta">15</span>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <div class="goal-percent editable" id="abatesPct">827%</div>
+        <div class="progress-track"><div class="progress-fill" id="abatesFill" style="width: 0%;"></div></div>
+        <div class="goal-percent" id="abatesPct">0%</div>
     </div>
 
     <div class="card">
         <div class="goal-header">🚓 Prisões</div>
         <div class="goal-numbers">
-            <span class="current-num editable" id="prisoesAtual">0</span> / <span class="editable" id="prisoesMeta">25</span>
+            <span class="current-num" id="prisoesAtual">0</span> / <span class="meta-num" id="prisoesMeta">25</span>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <div class="goal-percent editable" id="prisoesPct">708%</div>
+        <div class="progress-track"><div class="progress-fill" id="prisoesFill" style="width: 0%;"></div></div>
+        <div class="goal-percent" id="prisoesPct">0%</div>
     </div>
 
     <div class="card">
         <div class="goal-header">🏋️ Treinos</div>
         <div class="goal-numbers">
-            <span class="current-num editable" id="treinosAtual">15</span> / <span class="editable" id="treinosMeta">20</span>
+            <span class="current-num" id="treinosAtual">0</span> / <span class="meta-num" id="treinosMeta">20</span>
         </div>
-        <div class="progress-track">
-            <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <div class="goal-percent editable" id="treinosPct">100%</div>
+        <div class="progress-track"><div class="progress-fill" id="treinosFill" style="width: 0%;"></div></div>
+        <div class="goal-percent" id="treinosPct">0%</div>
     </div>
 
-    <!-- REGISTROS / PRINTS -->
-    <div class="section-title">REGISTROS / PRINTS</div>
-    
-    <div class="filters">
-        <button class="filter-btn active">Todos</button>
-        <button class="filter-btn">Treinos</button>
-        <button class="filter-btn">Operação/Blitz</button>
-        <button class="filter-btn">Info</button>
+    <!-- CAIXA DE UPLOAD -->
+    <div class="section-title">REGISTRAR TREINO / OPERAÇÃO</div>
+    <div class="upload-box">
+        <img id="previewUpload" src="" alt="Pré-visualização">
+        <label class="upload-label" for="printInput">📷 Escolher Print</label>
+        <input type="file" id="printInput" accept="image/*">
+        
+        <input type="text" id="printTag" placeholder="Tag (Ex: 🏋️ Treinos, 🚓 Blitz)">
+        <input type="text" id="printDesc" placeholder="Descreva a atividade...">
+        <button onclick="salvarPrint()">PUBLICAR REGISTRO</button>
     </div>
 
-    <!-- Print Card 1 -->
-    <div class="print-card">
-        <!-- Substitua o src abaixo pelo link da sua imagem -->
-        <img src="https://i.imgur.com/KxXjH8C.jpg" alt="Print" class="print-img">
-        <div class="print-info">
-            <div class="print-tag">📊 Info</div>
-            <div class="print-date">18/07/2026 a 21/07/2026</div>
-            <div class="print-desc">Comprovação de progresso: Abates de Traficantes 91 -> 215, Prisões efetuadas 137 -> 314</div>
-        </div>
+    <!-- LISTA DE REGISTROS -->
+    <div class="section-title">MEUS REGISTROS</div>
+    <div id="printsContainer">
+        <!-- Os prints salvos aparecerão aqui -->
     </div>
-
-    <!-- Print Card 2 -->
-    <div class="print-card">
-        <img src="https://i.imgur.com/YvVpZkU.jpg" alt="Print" class="print-img">
-        <div class="print-info">
-            <div class="print-tag">🏋️ Treinos</div>
-            <div class="print-date">21/07/2026</div>
-            <div class="print-desc">Treino com Tenente Coronel Skinka #15 - 15 treinos concluídos, meta batida!</div>
-        </div>
-    </div>
-
 </div>
 
 <script>
-    // Função para tornar os números editáveis clicando neles
-    document.querySelectorAll('.editable').forEach(item => {
-        // Carrega o valor salvo no navegador, se existir
-        const savedValue = localStorage.getItem(item.id);
-        if (savedValue) {
-            item.innerText = savedValue;
+    /* =========================================
+       LÓGICA DAS METAS (Cálculo Automático)
+       ========================================= */
+    function calcularPorcentagem(idBase) {
+        // Pega os valores atuais ou usa 0 e 1 por padrão
+        let atual = parseFloat(localStorage.getItem(idBase + 'Atual')) || parseFloat(document.getElementById(idBase + 'Atual').innerText) || 0;
+        let meta = parseFloat(localStorage.getItem(idBase + 'Meta')) || parseFloat(document.getElementById(idBase + 'Meta').innerText) || 1;
+        
+        // Calcula
+        let porcentagem = (atual / meta) * 100;
+        
+        // Atualiza os textos na tela
+        document.getElementById(idBase + 'Atual').innerText = atual;
+        document.getElementById(idBase + 'Meta').innerText = meta;
+        document.getElementById(idBase + 'Pct').innerText = porcentagem.toFixed(0) + '%';
+        
+        // Atualiza a barra visual (limita a barra a 100% no visual para não quebrar a tela)
+        let tamanhoBarra = porcentagem > 100 ? 100 : porcentagem;
+        document.getElementById(idBase + 'Fill').style.width = tamanhoBarra + '%';
+    }
+
+    // Aplica a função para as 3 categorias
+    ['abates', 'prisoes', 'treinos'].forEach(idBase => {
+        ['Atual', 'Meta'].forEach(tipo => {
+            let elemento = document.getElementById(idBase + tipo);
+            
+            // Evento de clique para editar
+            elemento.addEventListener('click', function() {
+                let valor = prompt("Digite o novo valor (apenas números):", this.innerText);
+                if (valor !== null && !isNaN(valor) && valor.trim() !== "") {
+                    localStorage.setItem(this.id, valor);
+                    calcularPorcentagem(idBase); // Recalcula tudo automaticamente
+                }
+            });
+        });
+        // Roda o cálculo assim que a página abre
+        calcularPorcentagem(idBase); 
+    });
+
+    /* =========================================
+       LÓGICA DE UPLOAD DE PRINTS
+       ========================================= */
+    const printInput = document.getElementById('printInput');
+    const previewUpload = document.getElementById('previewUpload');
+    let base64Image = "";
+
+    // Quando o usuário escolhe a imagem, mostra uma prévia
+    printInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                base64Image = event.target.result;
+                previewUpload.src = base64Image;
+                previewUpload.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Função para salvar e criar o print
+    function salvarPrint() {
+        const tag = document.getElementById('printTag').value.trim() || "📌 Info";
+        const desc = document.getElementById('printDesc').value.trim();
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
+
+        if (!base64Image) {
+            alert("Por favor, selecione uma imagem primeiro!");
+            return;
+        }
+        if (!desc) {
+            alert("Por favor, digite uma descrição!");
+            return;
         }
 
-        // Adiciona o evento de clique para editar
-        item.addEventListener('click', function() {
-            let newValue = prompt("Atualizar valor para:", this.innerText);
-            if (newValue !== null && newValue.trim() !== "") {
-                this.innerText = newValue;
-                // Salva no armazenamento local do navegador
-                localStorage.setItem(this.id, newValue);
-            }
+        // Puxa os prints antigos do cache, ou cria uma lista vazia
+        let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
+        
+        // Adiciona o novo print no começo da lista
+        meusPrints.unshift({ img: base64Image, tag: tag, data: dataAtual, desc: desc });
+
+        try {
+            localStorage.setItem('choquePrints', JSON.stringify(meusPrints));
+            
+            // Limpa o formulário
+            document.getElementById('printTag').value = '';
+            document.getElementById('printDesc').value = '';
+            previewUpload.src = '';
+            previewUpload.style.display = 'none';
+            base64Image = '';
+            printInput.value = '';
+
+            // Atualiza a lista na tela
+            carregarPrints();
+        } catch (e) {
+            alert("A imagem é muito pesada para salvar no armazenamento local. Tente um print cortado ou com menor resolução.");
+        }
+    }
+
+    // Função para mostrar os prints na tela
+    function carregarPrints() {
+        const container = document.getElementById('printsContainer');
+        container.innerHTML = '';
+        let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
+
+        meusPrints.forEach((print, index) => {
+            const card = document.createElement('div');
+            card.className = 'print-card';
+            card.innerHTML = `
+                <button class="delete-print" onclick="apagarPrint(${index})">X</button>
+                <img src="${print.img}" alt="Registro" class="print-img">
+                <div class="print-info">
+                    <div class="print-tag">${print.tag}</div>
+                    <div class="print-date">${print.data}</div>
+                    <div class="print-desc">${print.desc}</div>
+                </div>
+            `;
+            container.appendChild(card);
         });
-    });
+    }
+
+    function apagarPrint(index) {
+        if (confirm("Tem certeza que deseja apagar este registro?")) {
+            let meusPrints = JSON.parse(localStorage.getItem('choquePrints')) || [];
+            meusPrints.splice(index, 1);
+            localStorage.setItem('choquePrints', JSON.stringify(meusPrints));
+            carregarPrints();
+        }
+    }
+
+    // Carrega a lista quando a página abre
+    carregarPrints();
 </script>
 
 </body>
