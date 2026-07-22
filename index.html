@@ -154,10 +154,12 @@
         .upload-box button { background-color: var(--primary-red); color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
         .upload-box button:hover { background-color: #b20710; }
         
-        /* Pré-visualizações de imagens */
-        .preview-container { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
-        .preview-box { display: none; flex: 1; min-width: 120px; text-align: center; }
-        .preview-box img { width: 100%; max-height: 120px; object-fit: cover; border-radius: 5px; border: 1px solid #444; }
+        /* Previews unificados para Múltiplas Imagens ou Info */
+        .preview-container { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .thumb-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid #444; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        
+        .preview-box { display: none; flex: 1; min-width: 110px; text-align: center; }
+        .preview-box img { width: 100%; max-height: 110px; object-fit: cover; border-radius: 5px; border: 1px solid #444; }
         .preview-box span { font-size: 12px; color: var(--accent-yellow); font-weight: bold; display: block; margin-top: 3px; }
 
         .filters { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
@@ -175,6 +177,11 @@
         .print-images-dual div { flex: 1; position: relative; }
         .print-images-dual img { width: 100%; height: 240px; object-fit: cover; display: block; cursor: pointer; transition: opacity 0.2s; }
         .print-images-dual img:hover { opacity: 0.9; }
+
+        /* GALERIA PARA MULTIPLOS PRINTS */
+        .print-images-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 4px; background: #000; padding: 4px; border-bottom: 1px solid #333; }
+        .print-images-grid img { width: 100%; height: 120px; object-fit: cover; cursor: pointer; transition: 0.2s; border-radius: 4px; border: 1px solid #222; }
+        .print-images-grid img:hover { opacity: 0.8; border-color: var(--accent-yellow); }
 
         .img-badge { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.85); color: var(--accent-yellow); font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); pointer-events: none; }
 
@@ -260,15 +267,16 @@
             
             <select id="printTag" onchange="verificarTipoTag()">
                 <option value="Info">📊 Info (Antes e Depois)</option>
-                <option value="Treinos">🏋️ Treinos</option>
-                <option value="Operação/Blitz">🚓 Operação/Blitz</option>
+                <option value="Treinos">🏋️ Treinos (Múltiplas Fotos)</option>
+                <option value="Operação/Blitz">🚓 Operação/Blitz (Múltiplas Fotos)</option>
             </select>
 
             <!-- Pré-visualizações das imagens carregadas -->
-            <div class="preview-container">
+            <!-- Área para a categoria Info (Duas imagens) -->
+            <div class="preview-container" id="previewAreaInfo">
                 <div class="preview-box" id="boxPrev1">
                     <img id="previewUpload1" src="" alt="Prev 1">
-                    <span id="labelPrev1">Imagem</span>
+                    <span id="labelPrev1">ANTES</span>
                 </div>
                 <div class="preview-box" id="boxPrev2">
                     <img id="previewUpload2" src="" alt="Prev 2">
@@ -276,9 +284,13 @@
                 </div>
             </div>
 
+            <!-- Área para Múltiplas Imagens (Treinos/Operação) -->
+            <div class="preview-container" id="previewAreaMulti" style="display: none;"></div>
+
             <!-- Botões de seleção de arquivo -->
             <div id="inputsUploadArea">
                 <label class="upload-label" for="printInput1" id="labelBtn1">📷 Escolher Print (Antes)</label>
+                <!-- O atributo multiple será adicionado/removido via JS dependendo da categoria -->
                 <input type="file" id="printInput1" accept="image/*">
 
                 <div id="segundoArquivoDiv" style="display: block;">
@@ -398,103 +410,154 @@
     }
 
     /* =========================================
-       COMPORTAMENTO DINÂMICO DE UPLOAD & COMPRESSÃO OTIMIZADA
+       COMPORTAMENTO DINÂMICO: MULTIPLAS FOTOS x INFO
        ========================================= */
-    let base64Image1 = "";
-    let base64Image2 = "";
+    let base64Image1 = ""; // Usado para "Antes" na Categoria Info
+    let base64Image2 = ""; // Usado para "Depois" na Categoria Info
+    let arrayImagensMultiplas = []; // Usado para Treinos/Operações
+
+    const printInput1 = document.getElementById('printInput1');
+    const printInput2 = document.getElementById('printInput2');
+    let modoInfo = true;
 
     function verificarTipoTag() {
         const tagValor = document.getElementById('printTag').value;
         const segundoDiv = document.getElementById('segundoArquivoDiv');
         const labelBtn1 = document.getElementById('labelBtn1');
 
+        // Limpar seleções anteriores
+        printInput1.value = "";
+        printInput2.value = "";
+        base64Image1 = "";
+        base64Image2 = "";
+        arrayImagensMultiplas = [];
+        document.getElementById('previewUpload1').src = "";
+        document.getElementById('previewUpload2').src = "";
+        document.getElementById('boxPrev1').style.display = "none";
+        document.getElementById('boxPrev2').style.display = "none";
+        document.getElementById('previewAreaMulti').innerHTML = "";
+
         if (tagValor === "Info") {
-            segundoDiv.style.display = "block";
+            modoInfo = true;
+            printInput1.removeAttribute('multiple');
             labelBtn1.innerText = "📷 Escolher Print (Antes)";
+            segundoDiv.style.display = "block";
+            document.getElementById('previewAreaInfo').style.display = "flex";
+            document.getElementById('previewAreaMulti').style.display = "none";
         } else {
+            modoInfo = false;
+            printInput1.setAttribute('multiple', 'true');
+            labelBtn1.innerText = "📷 Selecionar Várias Fotos";
             segundoDiv.style.display = "none";
-            labelBtn1.innerText = "📷 Escolher Print";
-            base64Image2 = ""; 
-            document.getElementById('boxPrev2').style.display = "none";
+            document.getElementById('previewAreaInfo').style.display = "none";
+            document.getElementById('previewAreaMulti').style.display = "flex";
         }
     }
 
-    function comprimirImagem(file, callback) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            let img = new Image();
-            img.src = event.target.result;
-            img.onload = function() {
-                let cvs = document.createElement('canvas');
-                let max_width = 1000; 
-                let scale = max_width / img.width;
-                if (scale > 1) scale = 1; 
-                cvs.width = img.width * scale;
-                cvs.height = img.height * scale;
-                let ctxCvs = cvs.getContext('2d');
-                ctxCvs.drawImage(img, 0, 0, cvs.width, cvs.height);
-                callback(cvs.toDataURL('image/jpeg', 0.65)); 
+    // Função de compressão otimizada que retorna uma Promise (para facilitar o loop de várias fotos)
+    const compressFile = (file) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                let img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    let cvs = document.createElement('canvas');
+                    let max_width = 800; // Um pouco menor para permitir muitas fotos sem estourar limite
+                    let scale = max_width / img.width;
+                    if (scale > 1) scale = 1; 
+                    cvs.width = img.width * scale;
+                    cvs.height = img.height * scale;
+                    let ctxCvs = cvs.getContext('2d');
+                    ctxCvs.drawImage(img, 0, 0, cvs.width, cvs.height);
+                    resolve(cvs.toDataURL('image/jpeg', 0.60)); 
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    printInput1.addEventListener('change', async function(e) {
+        if (!e.target.files || e.target.files.length === 0) return;
+
+        document.getElementById('statusTxt').innerText = "PROCESSANDO IMAGEM...";
+
+        if (modoInfo) {
+            // Processa apenas a primeira imagem (Antes)
+            base64Image1 = await compressFile(e.target.files[0]);
+            document.getElementById('previewUpload1').src = base64Image1;
+            document.getElementById('boxPrev1').style.display = "block";
+        } else {
+            // Modo Galeria (Várias Imagens)
+            arrayImagensMultiplas = [];
+            document.getElementById('previewAreaMulti').innerHTML = "";
+            
+            for (let file of e.target.files) {
+                let compressedBase64 = await compressFile(file);
+                arrayImagensMultiplas.push(compressedBase64);
+                
+                let imgNode = document.createElement('img');
+                imgNode.src = compressedBase64;
+                imgNode.className = "thumb-preview";
+                document.getElementById('previewAreaMulti').appendChild(imgNode);
             }
-        };
-        reader.readAsDataURL(file);
-    }
-
-    const printInput1 = document.getElementById('printInput1');
-    const printInput2 = document.getElementById('printInput2');
-
-    printInput1.addEventListener('change', function(e) {
-        if (e.target.files[0]) {
-            comprimirImagem(e.target.files[0], function(resultado) {
-                base64Image1 = resultado;
-                document.getElementById('previewUpload1').src = base64Image1;
-                document.getElementById('boxPrev1').style.display = "block";
-                document.getElementById('labelPrev1').innerText = document.getElementById('printTag').value === "Info" ? "ANTES" : "Imagem";
-            });
         }
+        document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
     });
 
-    printInput2.addEventListener('change', function(e) {
-        if (e.target.files[0]) {
-            comprimirImagem(e.target.files[0], function(resultado) {
-                base64Image2 = resultado;
-                document.getElementById('previewUpload2').src = base64Image2;
-                document.getElementById('boxPrev2').style.display = "block";
-            });
+    printInput2.addEventListener('change', async function(e) {
+        if (e.target.files[0] && modoInfo) {
+            document.getElementById('statusTxt').innerText = "PROCESSANDO...";
+            base64Image2 = await compressFile(e.target.files[0]);
+            document.getElementById('previewUpload2').src = base64Image2;
+            document.getElementById('boxPrev2').style.display = "block";
+            document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
         }
     });
 
     function salvarPrint() {
         if (!isAdmin) return;
         const tagSelect = document.getElementById('printTag');
-        const tagOpcao = tagSelect.options[tagSelect.selectedIndex].text;
+        const tagOpcao = tagSelect.options[tagSelect.selectedIndex].text.split(" (")[0]; // Remove texto de dica
         const tagFiltro = tagSelect.value; 
         const desc = document.getElementById('printDesc').value.trim();
         const dataAtual = new Date().toLocaleDateString('pt-BR');
 
-        if (!base64Image1) { alert("Selecione pelo menos a primeira imagem!"); return; }
-        if (tagFiltro === "Info" && !base64Image2) { alert("Para a categoria Info, você precisa anexar a segunda imagem (Depois)!"); return; }
-        if (!desc) { alert("Digite uma descrição!"); return; }
+        if (!desc) { alert("Digite uma descrição para o registro!"); return; }
 
-        document.getElementById('statusTxt').innerText = "ENVIANDO PARA NUVEM...";
-
-        db.collection("prints").add({
-            img: base64Image1,
-            img2: tagFiltro === "Info" ? base64Image2 : null, 
+        let payload = {
             tagRender: tagOpcao,
             tagFiltro: tagFiltro,
             data: dataAtual,
             desc: desc,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
+        };
+
+        if (modoInfo) {
+            if (!base64Image1 || !base64Image2) { alert("Para a categoria Info, é obrigatório anexar as fotos de Antes e Depois!"); return; }
+            payload.img = base64Image1;
+            payload.img2 = base64Image2;
+        } else {
+            if (arrayImagensMultiplas.length === 0) { alert("Selecione pelo menos uma imagem para salvar!"); return; }
+            payload.imgs = arrayImagensMultiplas; // Salva o Array inteiro com todas as fotos!
+        }
+
+        document.getElementById('statusTxt').innerText = "ENVIANDO PARA NUVEM...";
+
+        db.collection("prints").add(payload).then(() => {
+            // Limpa form
             document.getElementById('printDesc').value = '';
+            printInput1.value = ''; 
+            printInput2.value = '';
+            base64Image1 = ""; base64Image2 = ""; arrayImagensMultiplas = [];
             document.getElementById('previewUpload1').src = ''; document.getElementById('boxPrev1').style.display = 'none';
             document.getElementById('previewUpload2').src = ''; document.getElementById('boxPrev2').style.display = 'none';
-            base64Image1 = ""; base64Image2 = "";
-            printInput1.value = ''; printInput2.value = '';
+            document.getElementById('previewAreaMulti').innerHTML = '';
+            
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
             alert("Registro publicado com sucesso na nuvem para todos os visitantes!");
         }).catch(err => {
-            alert("Erro ao salvar! Tente uma imagem mais leve.");
+            alert("Erro ao salvar! Se selecionou muitas fotos juntas, tente dividir em dois envios menores.");
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
         });
     }
@@ -528,7 +591,10 @@
                 card.className = 'print-card';
                 
                 let conteudoImagens = "";
-                if (print.img2) {
+                
+                // Lógica de Renderização Baseada no Tipo de Registro
+                if (print.tagFiltro === "Info" && print.img2) {
+                    // Modo Comparação (Antes / Depois)
                     conteudoImagens = `
                         <div class="print-images-dual">
                             <div>
@@ -541,7 +607,19 @@
                             </div>
                         </div>
                     `;
-                } else {
+                } else if (print.imgs && print.imgs.length > 0) {
+                    // Modo Galeria Múltipla
+                    if (print.imgs.length === 1) {
+                        conteudoImagens = `<img src="${print.imgs[0]}" alt="Registro" class="print-images-single" onclick="abrirZoom('${print.imgs[0]}')">`;
+                    } else {
+                        conteudoImagens = `<div class="print-images-grid">`;
+                        print.imgs.forEach(urlImg => {
+                            conteudoImagens += `<img src="${urlImg}" onclick="abrirZoom('${urlImg}')">`;
+                        });
+                        conteudoImagens += `</div>`;
+                    }
+                } else if (print.img) {
+                    // Fallback de segurança para posts muito antigos
                     conteudoImagens = `<img src="${print.img}" alt="Registro" class="print-images-single" onclick="abrirZoom('${print.img}')">`;
                 }
 
