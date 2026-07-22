@@ -108,10 +108,23 @@
         .text-red { color: #ff3333; text-shadow: 0 0 5px rgba(255, 51, 51, 0.4); }
         .bar-yellow { background: linear-gradient(90deg, #806600, #ffcc00, #806600); box-shadow: 0 0 12px rgba(255, 204, 0, 0.5); }
         .text-yellow { color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
-        .bar-green { background: linear-gradient(90deg, #004d00, #00e600, #004d00); box-shadow: 0 0 12px rgba(0, 230, 0, 0.5); }
-        .text-green { color: #00e600; text-shadow: 0 0 5px rgba(0, 230, 0, 0.4); }
         
-        /* Efeito Dourado/Fogo EXCLUSIVO para acima de 100% */
+        /* Efeito Fogo Verde EXCLUSIVO para exatamente 100% */
+        @keyframes greenFireBurn {
+            0% { background-position: 0% 50%; box-shadow: 0 0 15px #00ff44, 0 0 5px #00ff88 inset; }
+            50% { background-position: 100% 50%; box-shadow: 0 0 25px #00ffaa, 0 0 12px #ffffff inset; }
+            100% { background-position: 0% 50%; box-shadow: 0 0 15px #00ff44, 0 0 5px #00ff88 inset; }
+        }
+        .bar-green-fire { background: linear-gradient(90deg, #004d00, #00e600, #00ff88, #ffffff, #00e600); background-size: 300% 300%; animation: greenFireBurn 0.4s ease-in-out infinite; border: 1px solid rgba(0, 255, 128, 0.8); }
+        
+        @keyframes textGreenFireAnim {
+            0% { color: #00e600; text-shadow: 0 0 8px #00aa00, 0 0 20px #00ff66; transform: scale(1); }
+            50% { color: #ffffff; text-shadow: 0 0 15px #00ff88, 0 0 30px #00ff00; transform: scale(1.06); }
+            100% { color: #00e600; text-shadow: 0 0 8px #00aa00, 0 0 20px #00ff66; transform: scale(1); }
+        }
+        .text-green-fire { animation: textGreenFireAnim 0.4s infinite; display: inline-block; }
+
+        /* Efeito Fogo Dourado EXCLUSIVO para acima de 101% */
         @keyframes goldFireBurn {
             0% { background-position: 0% 50%; box-shadow: 0 0 15px #ffaa00, 0 0 5px #ffd700 inset; }
             50% { background-position: 100% 50%; box-shadow: 0 0 25px #ffcc00, 0 0 12px #ffffff inset; }
@@ -327,7 +340,7 @@
         }
     });
 
-    /* LÓGICA DAS METAS (100% SÓLIDO E > 100% PISCANDO EM DOURADO/FOGO) */
+    /* LÓGICA DAS METAS (100% = VERDE FOGO, > 101% = DOURADO FOGO) */
     function renderizarMeta(idBase, atual, meta) {
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
@@ -345,11 +358,14 @@
             bar.classList.add('bar-red'); pText.classList.add('text-red'); 
         } else if (porcentagem < 50) { 
             bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); 
-        } else if (porcentagem <= 100) { 
-            bar.classList.add('bar-green'); pText.classList.add('text-green'); 
-        } else { 
-            // Apenas quando ultrapassar 100% ativa o efeito piscante dourado/fogo
+        } else if (porcentagem === 100) { 
+            // Exatamente 100%: Verde piscando pegando fogo
+            bar.classList.add('bar-green-fire'); pText.classList.add('text-green-fire'); 
+        } else if (porcentagem > 100) { 
+            // Acima de 101%: Dourado piscando pegando fogo
             bar.classList.add('bar-gold-fire'); pText.classList.add('text-gold-fire'); 
+        } else { 
+            bar.classList.add('bar-green'); pText.classList.add('text-green'); 
         }
     }
 
