@@ -9,8 +9,6 @@
     <!-- CONEXÃO COM O FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <!-- ADICIONADO: FIREBASE STORAGE PARA ARMAZENAR MULTIPLAS FOTOS -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
 
     <style>
         :root {
@@ -215,6 +213,7 @@
 
 <div class="container">
     <header>
+        <!-- LOGO COM ANIMAÇÃO TIPO TELA DE CARREGAMENTO EM AMARELO -->
         <div class="logo-wrapper">
             <div class="loading-ring"></div>
             <div class="logo-container" id="btnAdmin" title="Dê um duplo clique para logar como Admin"></div>
@@ -261,7 +260,7 @@
         </div>
     </div>
 
-    <!-- AREA RESTRITA A ADMIN -->
+    <!-- AREA RESTRITA A ADMIN (Upload direto pela Home) -->
     <div class="area-restrita">
         <div class="section-title">REGISTRAR ATIVIDADE</div>
         <div class="upload-box">
@@ -272,6 +271,8 @@
                 <option value="Operação/Blitz">🚓 Operação/Blitz (Múltiplas Fotos)</option>
             </select>
 
+            <!-- Pré-visualizações das imagens carregadas -->
+            <!-- Área para a categoria Info (Duas imagens) -->
             <div class="preview-container" id="previewAreaInfo">
                 <div class="preview-box" id="boxPrev1">
                     <img id="previewUpload1" src="" alt="Prev 1">
@@ -283,10 +284,13 @@
                 </div>
             </div>
 
+            <!-- Área para Múltiplas Imagens (Treinos/Operação) -->
             <div class="preview-container" id="previewAreaMulti" style="display: none;"></div>
 
+            <!-- Botões de seleção de arquivo -->
             <div id="inputsUploadArea">
                 <label class="upload-label" for="printInput1" id="labelBtn1">📷 Escolher Print (Antes)</label>
+                <!-- O atributo multiple será adicionado/removido via JS dependendo da categoria -->
                 <input type="file" id="printInput1" accept="image/*">
 
                 <div id="segundoArquivoDiv" style="display: block;">
@@ -296,7 +300,7 @@
             </div>
             
             <input type="text" id="printDesc" placeholder="Descreva a atividade...">
-            <button id="btnSalvar" onclick="salvarPrint()">PUBLICAR REGISTRO NA NUVEM</button>
+            <button onclick="salvarPrint()">PUBLICAR REGISTRO NA NUVEM</button>
         </div>
     </div>
 
@@ -326,7 +330,6 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const storage = firebase.storage(); // <- INICIANDO O FIREBASE STORAGE
 
     document.getElementById("statusTxt").innerText = "SISTEMA ONLINE (NUVEM)";
 
@@ -351,7 +354,7 @@
         }
     });
 
-    /* LÓGICA DAS METAS CORRIGIDA */
+    /* LÓGICA DAS METAS CORRIGIDA (50% A 99% VERDE FIXO, 100% VERDE FOGO, >101% DOURADO FOGO) */
     function renderizarMeta(idBase, atual, meta) {
         document.getElementById(idBase + 'Atual').innerText = atual;
         document.getElementById(idBase + 'Meta').innerText = meta;
@@ -370,10 +373,13 @@
         } else if (porcentagem < 50) { 
             bar.classList.add('bar-yellow'); pText.classList.add('text-yellow'); 
         } else if (porcentagem >= 50 && porcentagem < 100) { 
+            // De 50% a 99%: Fica Verde sólido
             bar.classList.add('bar-green'); pText.classList.add('text-green'); 
         } else if (porcentagem === 100) { 
+            // Exatamente 100%: Verde piscando pegando fogo
             bar.classList.add('bar-green-fire'); pText.classList.add('text-green-fire'); 
         } else { 
+            // Acima de 100%: Dourado piscando pegando fogo
             bar.classList.add('bar-gold-fire'); pText.classList.add('text-gold-fire'); 
         }
     }
@@ -403,10 +409,12 @@
         }
     }
 
-    /* COMPORTAMENTO DINÂMICO */
-    let base64Image1 = ""; 
-    let base64Image2 = ""; 
-    let arrayImagensMultiplas = []; 
+    /* =========================================
+       COMPORTAMENTO DINÂMICO: MULTIPLAS FOTOS x INFO
+       ========================================= */
+    let base64Image1 = ""; // Usado para "Antes" na Categoria Info
+    let base64Image2 = ""; // Usado para "Depois" na Categoria Info
+    let arrayImagensMultiplas = []; // Usado para Treinos/Operações
 
     const printInput1 = document.getElementById('printInput1');
     const printInput2 = document.getElementById('printInput2');
@@ -417,6 +425,7 @@
         const segundoDiv = document.getElementById('segundoArquivoDiv');
         const labelBtn1 = document.getElementById('labelBtn1');
 
+        // Limpar seleções anteriores
         printInput1.value = "";
         printInput2.value = "";
         base64Image1 = "";
@@ -445,6 +454,7 @@
         }
     }
 
+    // Função de compressão otimizada que retorna uma Promise (para facilitar o loop de várias fotos)
     const compressFile = (file) => {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -453,7 +463,7 @@
                 img.src = event.target.result;
                 img.onload = function() {
                     let cvs = document.createElement('canvas');
-                    let max_width = 800; 
+                    let max_width = 800; // Um pouco menor para permitir muitas fotos sem estourar limite
                     let scale = max_width / img.width;
                     if (scale > 1) scale = 1; 
                     cvs.width = img.width * scale;
@@ -470,13 +480,15 @@
     printInput1.addEventListener('change', async function(e) {
         if (!e.target.files || e.target.files.length === 0) return;
 
-        document.getElementById('statusTxt').innerText = "COMPRIMINDO IMAGENS...";
+        document.getElementById('statusTxt').innerText = "PROCESSANDO IMAGEM...";
 
         if (modoInfo) {
+            // Processa apenas a primeira imagem (Antes)
             base64Image1 = await compressFile(e.target.files[0]);
             document.getElementById('previewUpload1').src = base64Image1;
             document.getElementById('boxPrev1').style.display = "block";
         } else {
+            // Modo Galeria (Várias Imagens)
             arrayImagensMultiplas = [];
             document.getElementById('previewAreaMulti').innerHTML = "";
             
@@ -495,7 +507,7 @@
 
     printInput2.addEventListener('change', async function(e) {
         if (e.target.files[0] && modoInfo) {
-            document.getElementById('statusTxt').innerText = "COMPRIMINDO...";
+            document.getElementById('statusTxt').innerText = "PROCESSANDO...";
             base64Image2 = await compressFile(e.target.files[0]);
             document.getElementById('previewUpload2').src = base64Image2;
             document.getElementById('boxPrev2').style.display = "block";
@@ -503,11 +515,10 @@
         }
     });
 
-    // 🚨 FUNÇÃO MODIFICADA PARA ENVIAR PARA O FIREBASE STORAGE (PERMITE MUITAS FOTOS)
-    async function salvarPrint() {
+    function salvarPrint() {
         if (!isAdmin) return;
         const tagSelect = document.getElementById('printTag');
-        const tagOpcao = tagSelect.options[tagSelect.selectedIndex].text.split(" (")[0]; 
+        const tagOpcao = tagSelect.options[tagSelect.selectedIndex].text.split(" (")[0]; // Remove texto de dica
         const tagFiltro = tagSelect.value; 
         const desc = document.getElementById('printDesc').value.trim();
         const dataAtual = new Date().toLocaleDateString('pt-BR');
@@ -522,45 +533,18 @@
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        const btn = document.getElementById('btnSalvar');
-        btn.disabled = true;
-        btn.innerText = "ENVIANDO...";
+        if (modoInfo) {
+            if (!base64Image1 || !base64Image2) { alert("Para a categoria Info, é obrigatório anexar as fotos de Antes e Depois!"); return; }
+            payload.img = base64Image1;
+            payload.img2 = base64Image2;
+        } else {
+            if (arrayImagensMultiplas.length === 0) { alert("Selecione pelo menos uma imagem para salvar!"); return; }
+            payload.imgs = arrayImagensMultiplas; // Salva o Array inteiro com todas as fotos!
+        }
 
-        try {
-            if (modoInfo) {
-                if (!base64Image1 || !base64Image2) { alert("Para a categoria Info, anexe as duas fotos!"); btn.disabled = false; return; }
-                
-                document.getElementById('statusTxt').innerText = "ENVIANDO FOTO 1 PARA NUVEM...";
-                let ref1 = storage.ref().child('prints/' + Date.now() + '_1.jpg');
-                await ref1.putString(base64Image1, 'data_url');
-                payload.img = await ref1.getDownloadURL();
+        document.getElementById('statusTxt').innerText = "ENVIANDO PARA NUVEM...";
 
-                document.getElementById('statusTxt').innerText = "ENVIANDO FOTO 2 PARA NUVEM...";
-                let ref2 = storage.ref().child('prints/' + Date.now() + '_2.jpg');
-                await ref2.putString(base64Image2, 'data_url');
-                payload.img2 = await ref2.getDownloadURL();
-
-            } else {
-                if (arrayImagensMultiplas.length === 0) { alert("Selecione pelo menos uma imagem!"); btn.disabled = false; return; }
-                
-                let urlsSalvas = [];
-                let timestampUpload = Date.now();
-                
-                for (let i = 0; i < arrayImagensMultiplas.length; i++) {
-                    document.getElementById('statusTxt').innerText = `ENVIANDO FOTO ${i+1} DE ${arrayImagensMultiplas.length}...`;
-                    let ref = storage.ref().child(`prints/${timestampUpload}_${i}.jpg`);
-                    await ref.putString(arrayImagensMultiplas[i], 'data_url');
-                    let urlDown = await ref.getDownloadURL();
-                    urlsSalvas.push(urlDown);
-                }
-                
-                payload.imgs = urlsSalvas; // Salva o array de URLs ao invés de textos gigantes!
-            }
-
-            document.getElementById('statusTxt').innerText = "SALVANDO REGISTRO...";
-            
-            await db.collection("prints").add(payload);
-
+        db.collection("prints").add(payload).then(() => {
             // Limpa form
             document.getElementById('printDesc').value = '';
             printInput1.value = ''; 
@@ -572,15 +556,10 @@
             
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
             alert("Registro publicado com sucesso na nuvem para todos os visitantes!");
-
-        } catch(err) {
-            console.error(err);
-            alert("Ocorreu um erro ao enviar as fotos. Verifique as Regras de Segurança do seu Firebase Storage.");
+        }).catch(err => {
+            alert("Erro ao salvar! Se selecionou muitas fotos juntas, tente dividir em dois envios menores.");
             document.getElementById('statusTxt').innerText = "SISTEMA ONLINE (NUVEM)";
-        }
-        
-        btn.disabled = false;
-        btn.innerText = "PUBLICAR REGISTRO NA NUVEM";
+        });
     }
 
     let filtroAtual = "Todos";
@@ -613,7 +592,9 @@
                 
                 let conteudoImagens = "";
                 
+                // Lógica de Renderização Baseada no Tipo de Registro
                 if (print.tagFiltro === "Info" && print.img2) {
+                    // Modo Comparação (Antes / Depois)
                     conteudoImagens = `
                         <div class="print-images-dual">
                             <div>
@@ -627,6 +608,7 @@
                         </div>
                     `;
                 } else if (print.imgs && print.imgs.length > 0) {
+                    // Modo Galeria Múltipla
                     if (print.imgs.length === 1) {
                         conteudoImagens = `<img src="${print.imgs[0]}" alt="Registro" class="print-images-single" onclick="abrirZoom('${print.imgs[0]}')">`;
                     } else {
@@ -637,6 +619,7 @@
                         conteudoImagens += `</div>`;
                     }
                 } else if (print.img) {
+                    // Fallback de segurança para posts muito antigos
                     conteudoImagens = `<img src="${print.img}" alt="Registro" class="print-images-single" onclick="abrirZoom('${print.img}')">`;
                 }
 
@@ -661,6 +644,7 @@
         }
     }
 
+    /* FUNÇÕES DE ZOOM DE IMAGEM */
     function abrirZoom(urlImg) {
         document.getElementById('imgZoomFull').src = urlImg;
         document.getElementById('imageModal').style.display = 'flex';
@@ -670,17 +654,20 @@
         document.getElementById('imageModal').style.display = 'none';
     }
 
+    /* CANVAS ESTÁTICO: CAMUFLAGEM NÍDITA NAS CORES DA CHOQUE (SEM ANIMAÇÃO DE FUNDO) */
     const canvas = document.getElementById("bgCanvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth; 
     canvas.height = window.innerHeight;
 
+    // Cores táticas da Choque (Preto, Cinza Chumbo e Vermelho Sutil)
     const choqueColors = ['#0e1012', '#181b20', '#22262d', '#2c1212', '#131519'];
 
     function desenharFundoCamuflado() {
         ctx.fillStyle = '#060708';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        // Gera manchas fixas de camuflagem tática espalhadas pela tela
         let numManchas = Math.floor((canvas.width * canvas.height) / 14000);
         for (let i = 0; i < numManchas; i++) {
             let x = (i * 37) % canvas.width;
